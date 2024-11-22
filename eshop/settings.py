@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from environs import Env
+from django.contrib import messages
 
 
 env = Env()
@@ -160,6 +161,12 @@ AUTH_USER_MODEL = 'userauths.User'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Set Messages in settings.py
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
 
 
 # Jazzmin Settings

@@ -18,4 +18,5 @@ urlpatterns = [
     # Create Order, Checkout
     path('create-order/', views.create_order, name='create-order'),
     path('checkout/<order_id>/', views.checkout, name='checkout'),
+    path('coupon-apply/<order_id>/', views.coupon_apply, name='coupon-apply'),
 ]

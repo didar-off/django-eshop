@@ -56,9 +56,10 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <form method="post" class="apply-coupon">
-                            <input type="text" placeholder="Enter Coupon Code...">
-                            <button class="btn  btn-md" name="login">Apply Coupon</button>
+                        <form method="post" action="{% url "store:coupon-apply" order.order_id %}" class="apply-coupon">
+                            {% csrf_token %}
+                            <input type="text" placeholder="Enter Coupon Code..." id="code" name="coupon_code">
+                            <button type="submit" class="btn  btn-md">Apply Coupon</button>
                         </form>
                     </div>
                 </div>
@@ -720,6 +721,14 @@
                                     <h5 class="text-heading text-end">{{order.service_fee}}$<span class="cart_service_fee">{{cart_service_fee|intcomma}}</span></h5>
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="cart_total_label">
+                                    <h6 class="text-muted">Shipping</h6>
+                                </td>
+                                <td class="cart_total_amount">
+                                    <h5 class="text-heading text-end">{{order.shipping}}$<span class="">{{cart_shipping|intcomma}}</span></h5>
+                                </td>
+                            </tr>
                             {% if order.saved %}
                             <tr>
                                 <td class="cart_total_label">
@@ -737,7 +746,7 @@
                             {% endif %}
                             <tr>
                                 <td class="cart_total_label">
-                                    <h6 class="text-muted">Initial Total</h6>
+                                    <h6 class="text-muted">Initial Total (Whitout Coupon)</h6>
                                 </td>
                                 <td class="cart_total_amount">
                                     <h5 class="text-heading text-end">{{order.initial_total}}$<span class="cart_initial_total">{{cart_initial_total|intcomma}}</span></h5>

@@ -213,3 +213,50 @@ def checkout(request, order_id):
     }
 
     return render(request, 'store/checkout.html', context)
+
+
+def coupon_apply(request, order_id):
+    try:
+        order = store_models.Order.objects.get(order_id=order_id)
+        order_items = store_models.OrderItem.objects.filter(order=order)
+    except store_models.Order.DoesNotExist:
+        return redirect('store:cart')
+    
+    if request.method == 'POST':
+        coupon_code = request.POST.get('coupon_code')
+
+        if not coupon_code:
+            messages.error(request, 'No coupon entered')
+            return redirect('store:checkout', order.order_id)
+        
+        try:
+            coupon = store_models.Coupon.objects.get(code=coupon_code)
+        except store_models.Coupon.DoesNotExist:
+            messages.error(request, 'Coupon does not exist')
+            return redirect('store:checkout', order.order_id)
+        
+        if coupon in order.coupons.all():
+            messages.error(request, 'Coupon already activated')
+            return redirect('store:checkout', order.order_id)
+        else:
+            total_discount = 0
+            
+            for i in order_items:
+                if coupon.vendor == i.product.vendor and coupon not in i.coupon.all():
+                    item_discount = i.total * coupon.discount / 100
+                    total_discount += item_discount
+
+                    i.coupon.add(coupon)
+                    i.total -= item_discount
+                    i.saved += item_discount
+                    i.save()
+                
+            if total_discount > 0:
+                order.coupons.add(coupon)
+                order.total -= total_discount
+                order.sub_total -= total_discount
+                order.saved += total_discount
+                order.save()
+    
+        messages.success(request, 'Coupon activated')
+        return redirect('store:checkout', order.order_id)
