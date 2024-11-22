@@ -632,9 +632,11 @@
                     <div class="sidebar-widget widget-category-2 mb-30">
                         <h5 class="section-title style-1 mb-30">Category</h5>
                         <ul>
+                            {% for i in categories %}
                             <li>
-                                <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-1.svg' %}" alt="" />Milks & Dairies</a><span class="count">30</span>
+                                <a href="shop-grid-right.html"> <img src="{{i.icon.url}}" alt="" />{{i.title}}</a><span class="count">{{i.products.count}}</span>
                             </li>
+                            {% endfor %}
                         </ul>
                     </div>
                     <!-- Fillter By Price -->
@@ -722,12 +724,14 @@
                 <div class="carausel-8-columns-cover position-relative">
                     <div class="carausel-8-columns" id="carausel-8-columns">
                         <div class="card-1">
+                            {% for i in categories %}
                             <figure class="img-hover-scale overflow-hidden">
-                                <a href="shop-grid-right.html"><img src="{% static 'assets/imgs/theme/icons/category-1.svg' %}" alt="" /></a>
+                                <a href="shop-grid-right.html"><img src="{{i.icon.url}}" alt="" /></a>
                             </figure>
                             <h6>
-                                <a href="shop-grid-right.html">Milks and <br />Dairies</a>
+                                <a href="shop-grid-right.html">{{i.title}}</a>
                             </h6>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>

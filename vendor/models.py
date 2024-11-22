@@ -27,14 +27,15 @@ TYPE = (
 
 
 class Vendor(models.Model):
-    vendor_id = ShortUUIDField(unique=True, max_length=10, length=5, alphabet='1234567890')
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='vendor')
 
-    image = models.ImageField(upload_to='vendor/images', default='default-vendor.jpg', null=True, blank=True)
-    store_name = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='vendor/images', default='default-vendor.jpg', blank=True)
+    store_name = models.CharField(max_length=100, null=True, blank=True)
     description = CKEditor5Field('Description', config_name='extends')
     country = models.CharField(max_length=100, null=True, blank=True)
 
+    vendor_id = ShortUUIDField(unique=True, max_length=10, length=5, alphabet='1234567890')
+    
     date = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(null=True, blank=True)
 
@@ -48,11 +49,11 @@ class Vendor(models.Model):
 
 
 class Payout(models.Model):
-    payout_id = ShortUUIDField(unique=True, max_length=10, length=5, alphabet='1234567890')
-
-    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True)
+    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True)
     item = models.ForeignKey('store.OrderItem', on_delete=models.SET_NULL, null=True, blank=True, related_name='payout')
+
     amount = models.DecimalField(max_digits=7, decimal_places=2, default=0.00, null=True, blank=True)
+    payout_id = ShortUUIDField(unique=True, max_length=10, length=5, alphabet='1234567890')
 
     date = models.DateTimeField(auto_now_add=True)
 
@@ -66,7 +67,7 @@ class Payout(models.Model):
     
 
 class BankAccount(models.Model):
-    vendor = models.OneToOneField(Vendor, on_delete=models.SET_NULL, null=True, blank=True)
+    vendor = models.OneToOneField(Vendor, on_delete=models.SET_NULL, null=True)
     account_type = models.CharField(max_length=50, choices=PAYOUT_METHOD, null=True, blank=True)
 
     bank_name = models.CharField(max_length=250)
@@ -86,11 +87,12 @@ class BankAccount(models.Model):
     
 
 class Notification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='vendor_notification')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='vendor_notification', null=True)
+
     type = models.CharField(max_length=100, choices=TYPE, default=None)
-    order = models.ForeignKey('store.OrderItem', on_delete=models.CASCADE)
+    order = models.ForeignKey('store.OrderItem', on_delete=models.CASCADE, null=True, blank=True)
     seen = models.BooleanField(default=False)
-    
+
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -99,3 +101,4 @@ class Notification(models.Model):
 
     def __str__(self):
         return self.type
+

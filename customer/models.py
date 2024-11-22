@@ -11,7 +11,7 @@ TYPE = (
 
 
 class Wishlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='wishlist')
 
     class Meta:
@@ -26,7 +26,7 @@ class Wishlist(models.Model):
         
 
 class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     full_name = models.CharField(max_length=200, null=True, blank=True, default=None)
 
     mobile = PhoneNumberField()
@@ -48,7 +48,8 @@ class Address(models.Model):
     
 
 class Notification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_notification')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_notification', null=True)
+    
     type = models.CharField(max_length=100, choices=TYPE, default=None)
     seen = models.BooleanField(default=False)
 
@@ -60,3 +61,4 @@ class Notification(models.Model):
 
     def __str__(self):
         return self.type
+
