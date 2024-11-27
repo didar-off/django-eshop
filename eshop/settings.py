@@ -171,6 +171,12 @@ PAYPAL_CLIENT_ID = env('PAYPAL_CLIENT_ID')
 PAYPAL_SECRET_ID = env('PAYPAL_SECRET_ID')
 
 
+# Stripe Settings
+
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
+
+
 # Set Messages in settings.py
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',

@@ -9,9 +9,13 @@ from customer import models as customer_models
 from django.contrib import messages
 from django.conf import settings
 import requests
+import stripe
+from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from plugins.tax_calculation import tax_calculation
 from plugins.service_fee import calculate_service_fee
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def index(request):
@@ -226,6 +230,7 @@ def checkout(request, order_id):
     context = {
         'order': order,
         'paypal_client_id': settings.PAYPAL_CLIENT_ID,
+        'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
     }
 
     return render(request, 'store/checkout.html', context)
@@ -333,3 +338,54 @@ def payment_status(request, order_id):
     }
     
     return render(request, 'store/payment-status.html', context)
+
+
+@csrf_exempt
+def stripe_payment(request, order_id):
+    order = store_models.Order.objects.get(order_id=order_id)
+
+    checkout_session = stripe.checkout.Session.create(
+        customer_email = order.address.email,
+        payment_method_types = ['card'],
+        line_items = [
+            {
+                'price_data': {
+                    'currency': 'USD',
+                    'product_data': {
+                        'name': order.address.full_name
+                    },
+                    'unit_amount': int(order.total * 100)
+                },
+                'quantity': 1
+            }
+        ],
+        mode = 'payment',
+        success_url = request.build_absolute_uri(reverse('store:stripe-payment-verify', args=[order.order_id])) + '?session_id={CHECKOUT_SESSION_ID}' + '&payment_method=Stripe',
+        cancel_url = request.build_absolute_uri(reverse('store:stripe-payment-verify', args=[order.order_id])),
+    )
+
+    print('Checkout Session: ', checkout_session)
+    return JsonResponse({'sessionId': checkout_session.id})
+
+
+def stripe_payment_verify(request, order_id):
+    order = store_models.Order.objects.get(order_id=order_id)
+
+    session_id = request.GET.get('session_id')
+    session = stripe.checkout.Session.retrieve(session_id)
+
+    if session.payment_status == 'paid':
+        if order.payment_status == 'Processing':
+            order.payment_status = 'Paid'
+            order.save()
+            clear_cart_items(request)
+
+            # Send Email to Customer
+
+            # Send InApp Notification
+
+            # Send Email to Vendor
+
+            return redirect(f'/payment_status/{order.order_id}?/payment_status=paid')
+        
+    return redirect(f'/payment_status/{order.order_id}?/payment_status=failed')

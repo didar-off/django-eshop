@@ -23,4 +23,7 @@ urlpatterns = [
     # Payment
     path('paypal-payment-verify/<order_id>/', views.paypal_payment_verify, name='paypal-payment-verify'),
     path('payment-status/<order_id>/', views.payment_status, name='payment-status'),
+    
+    path('stripe-payment/<order_id>/', views.stripe_payment, name='stripe-payment'),
+    path('stripe-payment-verify/<order_id>/', views.stripe_payment_verify, name='stripe-payment-verify'),
 ]

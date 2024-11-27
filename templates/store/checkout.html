@@ -791,6 +791,7 @@
                         <img src="{% static "assets/imgs/theme/icons/payment-zapper.svg" %} ">
                     </div>
                     <a href="#" class="btn btn-fill-out btn-block mt-30">Place an Order<i class="fi-rs-sign-out ml-15"></i></a>
+                    <button id="stripe-payment" type="submit" class="btn btn-fill-out btn-block mt-30">Pay with Stripe<i class="fi-rs-sign-out ml-15"></i></button>
                     <div class="paypal-button-container"></div>
                 </div>
             </div>
@@ -801,6 +802,42 @@
 <script src="https://www.paypal.com/sdk/js?client-id={{paypal_client_id}}&currency=USD"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    var stripe = Stripe("{{stripe_public_key}}"); // Replace with your actual Stripe public key
+    var checkoutButton = document.getElementById("stripe-payment");
+
+    try {
+        checkoutButton.addEventListener("click", function () {
+            var email = "{{order.address.email}}";
+
+            checkoutButton.innerHTML = "Processing <i class='fas fa-spinner fa-spin'></i>";
+
+            fetch("/stripe_payment/{{order.order_id}}/", {
+                method: 'POST',
+                body: JSON.stringify({ email: email}),
+            })
+                .then(function (response) {
+                    console.log(response);
+                    console.log(stripe);
+                    return response.json();
+                })
+                .then(function (session) {
+                    return stripe.redirectToCheckout({ sessionId: session.sessionId});
+                })
+                .then(function (result) {
+                    if (result.error) {
+                        alert(result.error.messages);
+                    }
+                })
+                .catch(function (error) {
+                    console.log("Error: ", error);
+                });
+        });
+    } catch (error) {
+        console.log(error);
+    }
+</script>
 
 <script>
     function initPayPalButton() {
