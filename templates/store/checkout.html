@@ -735,13 +735,13 @@
                                     <h6 class="text-muted">Discount</h6>
                                 </td>
                                 <td class="cart_total_amount">
-                                    <h5 class="text-heading text-end text-danger">{{order.saved}}$<span class="cart_discount">{{cart_discount|intcomma}}</span></h5>
+                                    <h5 class="text-heading text-end text-danger">-{{order.saved}}$<span class="cart_discount">{{cart_discount|intcomma}}</span></h5>
                                 </td>
                             </tr>
 
-                            {% for coupon in order.coupons.all %}
-                                <small>{{coupon.code}} Applied</small>
-                            {% endfor %}
+                                {% for coupon in order.coupons.all %}
+                                    <strong> <small class="text-brand text-end">{{coupon.code}} Applied</small> </strong>
+                                {% endfor %}
 
                             {% endif %}
                             <tr>
@@ -768,9 +768,86 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="payment ml-30">
+                    <h4 class="mb-30">Payment</h4>
+                    <div class="payment_option">
+                        <div class="custome-radio">
+                            <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios3" checked="">
+                            <label class="form-check-label" for="exampleRadios3" data-bs-toggle="collapse" data-target="#bankTranfer" aria-controls="bankTranfer">Direct Bank Transfer</label>
+                        </div>
+                        <div class="custome-radio">
+                            <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios4" checked="">
+                            <label class="form-check-label" for="exampleRadios4" data-bs-toggle="collapse" data-target="#checkPayment" aria-controls="checkPayment">Cash on delivery</label>
+                        </div>
+                        <div class="custome-radio">
+                            <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios5" checked="">
+                            <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Online Getway</label>
+                        </div>
+                    </div>
+                    <div class="payment-logo d-flex">
+                        <img class="mr-15" src="{% static "assets/imgs/theme/icons/payment-paypal.svg" %} ">
+                        <img class="mr-15" src="{% static "assets/imgs/theme/icons/payment-visa.svg" %} ">
+                        <img class="mr-15" src="{% static "assets/imgs/theme/icons/payment-master.svg" %} ">
+                        <img src="{% static "assets/imgs/theme/icons/payment-zapper.svg" %} ">
+                    </div>
+                    <a href="#" class="btn btn-fill-out btn-block mt-30">Place an Order<i class="fi-rs-sign-out ml-15"></i></a>
+                    <div class="paypal-button-container"></div>
+                </div>
             </div>
         </div>
     </div>
 </main>
+
+<script src="https://www.paypal.com/sdk/js?client-id={{paypal_client_id}}&currency=USD"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    function initPayPalButton() {
+        paypal
+            .Buttons({
+                style: {
+                    shape: 'rect',
+                    color: 'gold',
+                    layout: 'vertical',
+                    labe: 'paypal',
+                },
+                
+                createOrder: function (data, actions) {
+                    return actions.order.create({
+                        purchase_units: [
+                            {
+                                amount: {
+                                    currency_code: "USD",
+                                    value: "{{order.total}}", // Replace with the actual order total 
+                                },
+                            },
+                        ],
+                    });
+                },
+
+                onApprove: function (data, actions) {
+                    return actions.order.capture().then(function (orderData) {
+                        // Full available details
+                        console.log("Capture result", orderData, JSON.stringify(orderData, null, 2));
+
+                        // Show a success message within this page, for example:
+                        const element = document.getElementById("paypal-button-container");
+                        element.innerHTML = "";
+                        element.innerHTML = <h5>Verifying payment...</h5>;
+                        window.location.href = '/paypal_payment_verify/{{order.order_id}}/?transaction_id=?{orderData.id}';
+
+                        // Or go to another URL: actions.redirect('thank_you.html');
+                    });
+                },
+
+                onError: function (err) {
+                    console.log(err);
+                },
+            })
+            .render("#paypal-button-container");
+    }
+    initPayPalButton();
+</script>
 
 {% endblock content %}
