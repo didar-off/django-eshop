@@ -26,4 +26,6 @@ urlpatterns = [
     
     path('stripe-payment/<order_id>/', views.stripe_payment, name='stripe-payment'),
     path('stripe-payment-verify/<order_id>/', views.stripe_payment_verify, name='stripe-payment-verify'),
+
+    path('paystack-payment-verify/<order_id>/', views.paystack_payment_verify, name='paystack-payment-verify'),
 ]

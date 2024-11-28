@@ -791,6 +791,18 @@
                         <img src="{% static "assets/imgs/theme/icons/payment-zapper.svg" %} ">
                     </div>
                     <a href="#" class="btn btn-fill-out btn-block mt-30">Place an Order<i class="fi-rs-sign-out ml-15"></i></a>
+
+
+                    <button type="submit" id="start-payment-button" class="btn btn-fill-out btn-block mt-30">
+                        <img style="width: 250px; height: 40px; object-fit: contain;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flutterwave_Logo.png.1200px=Flutterwave_Logo.png" alt="Flutterwave">
+                    </button>
+
+                    
+                    <button type="button" id="paystack-payment" onclick="payWithPaystack()" class="btn btn-fill-out btn-block mt-30">
+                        <img style="width: 150px; height: 30px; object-fit: contain;" src="https://raw.githubusercontent.com/PaystackHQ/wordpress-payment-forms-for-paystack/master/icon.png" alt="Paystack">
+                    </button>
+
+
                     <button id="stripe-payment" type="submit" class="btn btn-fill-out btn-block mt-30">Pay with Stripe<i class="fi-rs-sign-out ml-15"></i></button>
                     <div class="paypal-button-container"></div>
                 </div>
@@ -802,6 +814,8 @@
 <script src="https://www.paypal.com/sdk/js?client-id={{paypal_client_id}}&currency=USD"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://js.stripe.com/v3/"></script>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script src="https://checkout.flutterwave.com/v3.js"></script>
 
 <script>
     var stripe = Stripe("{{stripe_public_key}}"); // Replace with your actual Stripe public key
@@ -885,6 +899,25 @@
             .render("#paypal-button-container");
     }
     initPayPalButton();
+</script>
+
+<script type="text/javascript">
+    function payWithPaystack() {
+        var handler = PaystackPop.setup({
+            key: "{{paystack_public_key}}",
+            email: "{{order.address.email}}",
+            amount: "{{amount_in_kobo}}",
+            currency: "NGN",
+            ref: "" + Math.floor(Math.random() * 1000000000 + 1),
+            callback: function (response) {
+                window.location.href = "/paystack_payment_verify/{{order.order_id}}/?reference=" + response.reference + "&payment_method=Paystack"
+            },
+            onClose: function () {
+                alert("Payment window closed");
+            },
+        });
+        handler.openIframe();
+    }
 </script>
 
 {% endblock content %}

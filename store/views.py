@@ -15,6 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from plugins.tax_calculation import tax_calculation
 from plugins.service_fee import calculate_service_fee
+from plugins.exchange_rate import convert_usd_inr, convert_usd_kobo, convert_usd_ngn
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
@@ -226,11 +227,19 @@ def clear_cart_items(request):
 def checkout(request, order_id):
     order = store_models.Order.objects.get(order_id=order_id)
 
+    amount_in_inr = convert_usd_inr(order.total)
+    amount_in_kobo = convert_usd_kobo(order.total)
+    amount_in_ngn = convert_usd_ngn(order.total)
+
 
     context = {
         'order': order,
+        'amount_in_inr': amount_in_inr,
+        'amount_in_kobo': amount_in_kobo,
+        'amount_in_ngn': amount_in_ngn,
         'paypal_client_id': settings.PAYPAL_CLIENT_ID,
         'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
+        'paystack_public_key': settings.PAYSTACK_PUBLIC_KEY,
     }
 
     return render(request, 'store/checkout.html', context)
@@ -389,3 +398,35 @@ def stripe_payment_verify(request, order_id):
             return redirect(f'/payment_status/{order.order_id}?/payment_status=paid')
         
     return redirect(f'/payment_status/{order.order_id}?/payment_status=failed')
+
+
+def paystack_payment_verify(request, order_id):
+    order = store_models.Order.objects.get(order_id=order_id)
+    reference = request.GET.get('reference', '')
+
+    if reference:
+        headers = {
+            'Authorization': f'Bearer {settings.PAYSTACK_PRIVATE_KEY}',
+            'Content-Type': 'application/json'
+        }
+
+        response = requests.get(f'https://api.paystack.com/transaction/verify/{reference}', headers=headers)
+        response_data = response.json()
+
+        if response_data['status']:
+            if response_data['data']['status'] == 'success':
+                if order.payment_status == 'Processing':
+                    order.payment_status = 'Paid'
+                    order.save()
+                    clear_cart_items(request)
+
+                    # Send Email to Customer
+
+                    # Send InApp Notification
+
+                    # Send Email to Vendor
+
+                    return redirect(f'/payment_status/{order.order_id}?/payment_status=paid')
+        
+        else:
+            return redirect(f'/payment_status/{order.order_id}?/payment_status=failed')
