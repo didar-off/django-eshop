@@ -240,6 +240,7 @@ def checkout(request, order_id):
         'paypal_client_id': settings.PAYPAL_CLIENT_ID,
         'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
         'paystack_public_key': settings.PAYSTACK_PUBLIC_KEY,
+        'flutterwave_public_key': settings.FLUTTERWAVE_PUBLIC_KEY,
     }
 
     return render(request, 'store/checkout.html', context)
@@ -430,3 +431,60 @@ def paystack_payment_verify(request, order_id):
         
         else:
             return redirect(f'/payment_status/{order.order_id}?/payment_status=failed')
+        
+
+def flutterwave_payment_verify(request, order_id):
+    order = store_models.Order.objects.get(order_id=order_id)
+    tx_ref = request.GET.get("reference", "")
+
+    headers = {
+            'Authorization': f'Bearer {settings.FLUTTERWAVE_PRIVATE_KEY}',
+            'Content-Type': 'application/json'
+        }
+    
+    response = requests.get(f'https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref={tx_ref}', headers=headers)
+    response_data = response.json()
+
+    if response_data['data']['status'] == 'successful':
+        if order.payment_status == 'Processing':
+            order.payment_status = 'Paid'
+            order.save()
+            clear_cart_items(request)
+
+            # Send Email to Customer
+
+            # Send InApp Notification
+
+            # Send Email to Vendor
+
+            return redirect(f'/payment_status/{order.order_id}?/payment_status=paid')
+        
+    return redirect(f'/payment_status/{order.order_id}?/payment_status=failed')
+
+
+def flutterwave_payment_callback(request, order_id):
+    order = store_models.Order.objects.get(order_id=order_id)
+    tx_ref = request.GET.get('tx_ref', '')
+
+    headers = {
+            'Authorization': f'Bearer {settings.FLUTTERWAVE_PRIVATE_KEY}',
+            'Content-Type': 'application/json'
+        }
+    
+    response = requests.get(f'https://api.flutterwave.com/v3/charges/verify_by_reference?tx_ref={tx_ref}', headers=headers)
+
+    if response.status_code == 200:
+        if order.payment_status == 'Processing':
+            order.payment_status = 'Paid'
+            order.save()
+            clear_cart_items(request)
+
+            # Send Email to Customer
+
+            # Send InApp Notification
+
+            # Send Email to Vendor
+
+            return redirect(f'/payment_status/{order.order_id}?/payment_status=paid')
+        
+    return redirect(f'/payment_status/{order.order_id}?/payment_status=failed')

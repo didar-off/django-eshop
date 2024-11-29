@@ -792,10 +792,21 @@
                     </div>
                     <a href="#" class="btn btn-fill-out btn-block mt-30">Place an Order<i class="fi-rs-sign-out ml-15"></i></a>
 
+                    <form action="https://checkout.flutterwave.com/v3/hosted/pay" method="post">
+                        <input type="hidden" name="public_key" value="{{flutterwave_public_key}}">
+                        <input type="hidden" name="customer[email]" value="{{order.address.email}}">
+                        <input type="hidden" name="customer[name]" value="{{order.address.full_name}}">
+                        <input type="hidden" name="tx_ref" value="{{order.order_id}}">
+                        <input type="hidden" name="amount" value="{{order.total}}">
+                        <input type="hidden" name="currency" value="USD">
+                        <input type="hidden" name="redirect_url" value="https://your_redirect_url.com/flutterwave_payment_callback/{{order.order_id}}/?payment_method=Flutterwave">
+                        <input type="hidden" name="meta[source]" value="docs-html-test">
 
-                    <button type="submit" id="start-payment-button" class="btn btn-fill-out btn-block mt-30">
-                        <img style="width: 250px; height: 40px; object-fit: contain;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flutterwave_Logo.png.1200px=Flutterwave_Logo.png" alt="Flutterwave">
-                    </button>
+                        <button type="submit" id="start-payment-button" class="btn btn-fill-out btn-block mt-30">
+                            <img style="width: 250px; height: 40px; object-fit: contain;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flutterwave_Logo.png.1200px=Flutterwave_Logo.png" alt="Flutterwave">
+                        </button>
+                    </form>
+
 
                     
                     <button type="button" id="paystack-payment" onclick="payWithPaystack()" class="btn btn-fill-out btn-block mt-30">

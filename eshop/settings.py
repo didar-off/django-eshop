@@ -31,7 +31,8 @@ SECRET_KEY = 'django-insecure-a*(xv)*ic22@^y6v^w%x_b@$@l1_$ccdfm@yaie@e-r5j=zf2e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'https://*.ngrok-free.app', 'https://fastcart.up.railway.app']
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
