@@ -792,6 +792,25 @@
                     </div>
                     <a href="#" class="btn btn-fill-out btn-block mt-30">Place an Order<i class="fi-rs-sign-out ml-15"></i></a>
 
+                    <form action="/{% url 'store:razorpay-payment-verify' order.order_id %}?payment_method=RazorPay" method="post">
+                        {% csrf_token %}
+                        <script>
+                            scr="https://checkout.razorpay.com/v1/chekout.js"
+                            data-key="{{razorpay_key_id}}"
+                            data-amount="{{amount_in_inr}}"
+                            data-currency="INR"
+                            data-order_id="{{razorpay_order_id}}"
+                            data-name="Your Company"
+                            data-desription="E-commerce Order"
+                            data-image="https://your_logo_url.com/logo.png"
+                            data-theme.color="#F37254"
+                        </script>
+
+                        <button type="button" class="btn btn-fill-out btn-block mt-30" style="background-color: #c1c9e8;">
+                            <img style="width: 150px; height: 30px; object-fit: contain;" src="https://upload.wikimedia.org/wikipedia/commons/8/89/Razorpay_logo.svg" alt="RazorPay">
+                        </button>
+                    </form>
+
                     <form action="https://checkout.flutterwave.com/v3/hosted/pay" method="post">
                         <input type="hidden" name="public_key" value="{{flutterwave_public_key}}">
                         <input type="hidden" name="customer[email]" value="{{order.address.email}}">
@@ -807,12 +826,9 @@
                         </button>
                     </form>
 
-
-                    
                     <button type="button" id="paystack-payment" onclick="payWithPaystack()" class="btn btn-fill-out btn-block mt-30">
                         <img style="width: 150px; height: 30px; object-fit: contain;" src="https://raw.githubusercontent.com/PaystackHQ/wordpress-payment-forms-for-paystack/master/icon.png" alt="Paystack">
                     </button>
-
 
                     <button id="stripe-payment" type="submit" class="btn btn-fill-out btn-block mt-30">Pay with Stripe<i class="fi-rs-sign-out ml-15"></i></button>
                     <div class="paypal-button-container"></div>

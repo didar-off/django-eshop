@@ -29,4 +29,6 @@ urlpatterns = [
 
     path('paystack-payment-verify/<order_id>/', views.paystack_payment_verify, name='paystack-payment-verify'),
     path('flutterwave-payment-callback/<order_id>/', views.flutterwave_payment_callback, name='flutterwave-payment-callback'),
+
+    path('razorpay-payment-verify/<order_id>/', views.razorpay_payment_verify, name='razorpay-payment-verify'),
 ]

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+import razorpay.errors
 
 from store import models as store_models
 
@@ -10,6 +11,7 @@ from django.contrib import messages
 from django.conf import settings
 import requests
 import stripe
+import razorpay
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -17,6 +19,9 @@ from plugins.tax_calculation import tax_calculation
 from plugins.service_fee import calculate_service_fee
 from plugins.exchange_rate import convert_usd_inr, convert_usd_kobo, convert_usd_ngn
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 
 def index(request):
@@ -231,9 +236,19 @@ def checkout(request, order_id):
     amount_in_kobo = convert_usd_kobo(order.total)
     amount_in_ngn = convert_usd_ngn(order.total)
 
+    try:
+        razorpay_order = razorpay_client.order.create({
+            'amount': int(amount_in_inr),
+            'currency': 'INR',
+            'payment_capture': '1'
+        })
+    except:
+        razorpay_order = None
+
 
     context = {
         'order': order,
+        'razorpay_order_id': razorpay_order['id'] if razorpay_order else None,
         'amount_in_inr': amount_in_inr,
         'amount_in_kobo': amount_in_kobo,
         'amount_in_ngn': amount_in_ngn,
@@ -241,6 +256,7 @@ def checkout(request, order_id):
         'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
         'paystack_public_key': settings.PAYSTACK_PUBLIC_KEY,
         'flutterwave_public_key': settings.FLUTTERWAVE_PUBLIC_KEY,
+        'razorpay_key_id': settings.RAZORPAY_KEY_ID
     }
 
     return render(request, 'store/checkout.html', context)
@@ -329,7 +345,7 @@ def paypal_payment_verify(request, order_id):
         if paypal_payment_status == 'COMPLETED':
             if order.payment_status == 'Processing':
                 order.payment_status = 'Paid'
-                order.payment_method = payment_method
+                order.payment_method = 'PayPal'
                 order.save()
                 clear_cart_items(request)
                 return redirect(f'/payment_status/{order.order_id}/?payment_status=paid')
@@ -387,6 +403,7 @@ def stripe_payment_verify(request, order_id):
     if session.payment_status == 'paid':
         if order.payment_status == 'Processing':
             order.payment_status = 'Paid'
+            order.payment_method = 'Stripe'
             order.save()
             clear_cart_items(request)
 
@@ -476,6 +493,7 @@ def flutterwave_payment_callback(request, order_id):
     if response.status_code == 200:
         if order.payment_status == 'Processing':
             order.payment_status = 'Paid'
+            order.payment_method = 'Flutterwave'
             order.save()
             clear_cart_items(request)
 
@@ -488,3 +506,42 @@ def flutterwave_payment_callback(request, order_id):
             return redirect(f'/payment_status/{order.order_id}?/payment_status=paid')
         
     return redirect(f'/payment_status/{order.order_id}?/payment_status=failed')
+
+
+@csrf_exempt
+def razorpay_payment_verify(request, order_id):
+    order = store_models.Order.objects.get(order_id=order_id)
+    payment_method = request.GET.get('payment_method')
+
+    if request.method == 'POST':
+        data = request.POST
+
+        razorpay_order_id = data.get('razorpay_order_id')
+        razorpay_payment_id = data.get('razorpay_payment_id')
+        razorpay_signature = data.get('razorpay_signature')
+
+        params_dict = {
+            'razorpay_order_id': razorpay_order_id,
+            'razorpay_payment_id': razorpay_payment_id,
+            'razorpay_signature': razorpay_signature,
+        }
+
+
+        try:
+            razorpay_client.utility.verify_payment_signature(params_dict)
+            if order.payment_status == 'Processing':
+                order.payment_method = 'RazorPay'
+                order.save()
+                clear_cart_items(request)
+
+                # Send Email to Customer
+
+                # Send InApp Notification
+
+                # Send Email to Vendor
+
+                return redirect(f'/payment_status/{order.order_id}?/payment_status=paid')
+        except razorpay.errors.SignatureVerificationError: 
+            return redirect(f'/payment_status/{order.order_id}?/payment_status=failed')
+        
+
