@@ -24,6 +24,7 @@ from store import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('store.urls')),
+    path('user/', include('userauths.urls')),
     path('ckeditor5/', include('django_ckeditor_5.urls')),
 ]
 

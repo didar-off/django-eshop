@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'anymail',
     'phonenumber_field',
     'django_ckeditor_5',
-    # 'captcha',
+    'captcha',
 ]
 
 MIDDLEWARE = [
@@ -208,6 +208,12 @@ FLUTTERWAVE_PRIVATE_KEY = env('FLUTTERWAVE_PRIVATE_KEY')
 
 RAZORPAY_KEY_ID = env('RAZORPAY_KEY_ID')
 RAZORPAY_KEY_SECRET = env('RAZORPAY_KEY_SECRET')
+
+
+# Django ReCaptcha Settings
+
+RECAPTCHA_PUBLIC_KEY = "6LckSo8qAAAAAGfS0POiGG7gExjA-BuvRU3VwuDV"
+RECAPTCHA_PRIVATE_KEY = "6LckSo8qAAAAADkP4RnTQDHxKPFAZGgxJ3jPseJr"
 
 
 # Set Messages in settings.py
