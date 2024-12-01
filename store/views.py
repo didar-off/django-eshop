@@ -3,24 +3,30 @@ from django.http import JsonResponse
 import razorpay.errors
 
 from store import models as store_models
+from customer import models as customer_models
+from vendor import models as vendor_models
 
 from decimal import Decimal
 from django.db.models import Q, Avg, Sum
-from customer import models as customer_models
+
 from django.contrib import messages
 from django.conf import settings
+
 import requests
 import stripe
 import razorpay
+
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 from plugins.tax_calculation import tax_calculation
 from plugins.service_fee import calculate_service_fee
 from plugins.exchange_rate import convert_usd_inr, convert_usd_kobo, convert_usd_ngn
+
+
 stripe.api_key = settings.STRIPE_SECRET_KEY
-
-
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 
@@ -407,11 +413,45 @@ def stripe_payment_verify(request, order_id):
             order.save()
             clear_cart_items(request)
 
-            # Send Email to Customer
 
-            # Send InApp Notification
+            # Send Email to Customer
+            customer_merge_data = {
+                'order': order,
+                'order_items': order.order_items()
+            }
+
+            subject = f'New Order'
+            text_body = render_to_string('email/order/customer/customer-new-order.txt', customer_merge_data)
+            html_body = render_to_string('email/order/customer/customer-new-order.html', customer_merge_data)
+
+            msg = EmailMultiAlternatives(
+                subject=subject, from_email=settings.FROM_EMAIL,
+                to=[order.address.email], body=text_body
+            )
+
+            msg.attach_alternative(html_body, 'text/html')
+            msg.send()
+            customer_models.Notification.objects.create(type='New Order', user=request.user)
+
 
             # Send Email to Vendor
+            for item in order.order_items():
+                vendor_merge_data = {
+                    'item': item
+                }
+
+            subject = f'New Sale'
+            text_body = render_to_string('email/order/vendor/vendor-new-order.txt', vendor_merge_data)
+            html_body = render_to_string('email/order/vendor/vendor-new-order.html', vendor_merge_data)
+
+            msg = EmailMultiAlternatives(
+                subject=subject, from_email=settings.FROM_EMAIL,
+                to=[item.vendor.email], body=text_body
+            )
+
+            msg.attach_alternative(html_body, 'text/html')
+            msg.send()
+            vendor_models.Notification.objects.create(type='New Order', user=item.vendor, order=item)
 
             return redirect(f'/payment_status/{order.order_id}?/payment_status=paid')
         

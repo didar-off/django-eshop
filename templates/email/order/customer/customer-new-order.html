@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Completed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333333;
+        }
+        .email-container {
+            max-width: 700px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(90deg, #0073e6, #005bb5);
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+        .header img {
+            max-width: 120px;
+            margin-bottom: 10px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .content {
+            padding: 20px;
+        }
+        .content h2 {
+            color: #0073e6;
+            margin-bottom: 20px;
+        }
+        .table-container {
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table th, table td {
+            border: 1px solid #dddddd;
+            padding: 10px;
+            text-align: left;
+        }
+        table th {
+            background-color: #f3f3f3;
+        }
+        .summary {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #555555;
+        }
+        .summary p {
+            margin: 5px 0;
+        }
+        .footer {
+            text-align: center;
+            background: #f3f3f3;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: #666666;
+        }
+        .button {
+            display: inline-block;
+            background: #0073e6;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background: #005bb5;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <img src="https://via.placeholder.com/150" alt="Company Logo">
+            <h1>Order Completed</h1>
+        </div>
+        <div class="content">
+            <h2>Thank You for Your Order!</h2>
+            <p>Dear {{order.address.full_name}}!</p>
+            <p>Your order <strong>#{{order.order_id}}</strong> has been successfully completed. Below are the details of your order:</p>
+
+            <div class="table-container">
+                <h3>Order Items</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in order_items %}
+                        <tr>
+                            <td>{{i.product.name}}</td>
+                            <td>{{i.qty}}</td>
+                            <td>${{i.sub_total}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-container">
+                <h3>Order Summary</h3>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Subtotal</th>
+                            <td>${{order.sub_total}}</td>
+                        </tr>
+                        <tr>
+                            <th>Shipping Fee</th>
+                            <td>${{order.shipping}}</td>
+                        </tr>
+                        <tr>
+                            <th>Tax Fee</th>
+                            <td>${{order.tax}}</td>
+                        </tr>
+                        <tr>
+                            <th>Total</th>
+                            <td><strong>${{order.total}}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-container">
+                <h3>Customer Details</h3>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Full Name</th>
+                            <td>{{order.address.full_name}}</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>{{order.address.email}}</td>
+                        </tr>
+                        <tr>
+                            <th>Phone</th>
+                            <td>{{order.address.moobile}}</td>
+                        </tr>
+                        <tr>
+                            <th>Shipping Address</th>
+                            <td>{{order.address.address}}</td>
+                        </tr>
+                        <tr>
+                            <th>Shipping Address</th>
+                            <td>{{order.address.city}}</td>
+                        </tr>
+                        <tr>
+                            <th>Shipping Address</th>
+                            <td>{{order.address.state}}</td>
+                        </tr>
+                        <tr>
+                            <th>Shipping Address</th>
+                            <td>{{order.address.country}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <a href="[Order Details URL]" class="button">View Order Details</a>
+
+            <p class="summary">If you have any questions or need further assistance, feel free to contact our support team.</p>
+            <p>Thank you for shopping with us!</p>
+            <p>Best regards,</p>
+            <p><strong>[Your Company Name]</strong></p>
+        </div>
+        <div class="footer">
+            <p>&copy; {{order.date|date:'Y'}} [Your Company Name]. All rights reserved.</p>
+            <p><a href="[Privacy Policy URL]">Privacy Policy</a> | <a href="[Contact URL]">Contact Us</a></p>
+        </div>
+    </div>
+</body>
+</html>
