@@ -792,7 +792,7 @@
                     </div>
                     <a href="#" class="btn btn-fill-out btn-block mt-30">Place an Order<i class="fi-rs-sign-out ml-15"></i></a>
 
-                    <form action="/{% url 'store:razorpay-payment-verify' order.order_id %}?payment_method=RazorPay" method="post">
+                    <form action="{% url 'store:razorpay-payment-verify' order.order_id %}?payment_method=RazorPay" method="post">
                         {% csrf_token %}
                         <script>
                             scr="https://checkout.razorpay.com/v1/chekout.js"
