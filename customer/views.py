@@ -21,3 +21,37 @@ def dashboard(request):
     }
 
     return render(request, 'customer/dashboard.html', context)
+
+
+@login_required
+def wishlist(request):
+    wishlist = customer_models.Wishlist.objects.filter(user=request.user)
+
+    context = {
+        'wishlist': wishlist,
+    }
+
+    return render(request, 'customer/wishlist.html', context)
+
+
+@login_required
+def remove_from_wishlist(request, id):
+    wishlist = customer_models.Wishlist.objects.get(user=request.user, id=id)
+    wishlist.delete()
+
+    messages.success(request, 'Item removed from wishlist')
+    return redirect('customer:wishlist')
+
+
+def add_to_wishlist(request, id):
+    if request.user.is_authenticated:
+        product = store_models.Product.objects.filter(id=id).first()
+        wishlist_exists = customer_models.Wishlist.objects.filter(product=product, user=request.user).first()
+
+        if not wishlist_exists:
+            customer_models.Wishlist.objects.create(user=request.user, product=product)
+        
+        wishlist = customer_models.Wishlist.objects.filter(user=request.user)
+        return JsonResponse({'message': 'Item added to wishlist', 'wishlist_count': wishlist.count()})
+    else:
+        return JsonResponse({'message': 'User is not logged in', 'wishlist_count': '0'})

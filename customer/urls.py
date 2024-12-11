@@ -5,4 +5,8 @@ app_name = 'customer'
 
 urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
+    
+    path('wishlist/', views.wishlist, name='wishlist'),
+    path('add-to-wishlist/<id>/', views.add_to_wishlist, name='add-to-wishlist'),
+    path('remove-from-wishlist/<id>/', views.remove_from_wishlist, name='remove-from-wishlist'),
 ]
