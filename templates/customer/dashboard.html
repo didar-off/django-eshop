@@ -33,6 +33,31 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notification-tab">
+                                    <div class="header">
+                                        <h3 class="mb-0">Notifications (Unread: {{notis.count}})</h3>
+                                    </div>
+                                    <br>
+                                    <div class="table-responsive order_table checkout">
+                                        <table class="table no-border">
+                                            <tbody>
+                                                {% for i in notis %}
+                                                <tr>
+                                                    <td>
+                                                        <h6 class="w-160 mb-5">Type: {{i.type}}</h6>
+                                                    </td>
+                                                    <td class="image product-thumbnail">Product: None</td>
+                                                    <td>
+                                                        <h6 class="text-muted pl-20 pr-20">Date: {{i.date}}</h6>
+                                                    </td>
+                                                    <td class="image product-thumbnail">Product: None</td>
+                                                    <td><h6><a href="{% url "customer:mark-notification-seen" i.id %}" class="btn-small d-block">Mark as Seen</a></h6></td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                                 <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
                                     <div class="card">
                                         <div class="card-header">

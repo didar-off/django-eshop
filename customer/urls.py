@@ -9,4 +9,6 @@ urlpatterns = [
     path('wishlist/', views.wishlist, name='wishlist'),
     path('add-to-wishlist/<id>/', views.add_to_wishlist, name='add-to-wishlist'),
     path('remove-from-wishlist/<id>/', views.remove_from_wishlist, name='remove-from-wishlist'),
+    
+    path('mark-notification-seen/<id>', views.mark_notification_seen, name='mark-notification-seen'),
 ]
