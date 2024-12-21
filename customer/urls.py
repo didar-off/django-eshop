@@ -11,4 +11,9 @@ urlpatterns = [
     path('remove-from-wishlist/<id>/', views.remove_from_wishlist, name='remove-from-wishlist'),
     
     path('mark-notification-seen/<id>', views.mark_notification_seen, name='mark-notification-seen'),
+
+    path('addresses/', views.addresses, name='addresses'),
+    path('address-detail/<id>', views.address_detail, name='address-detail'),
+    path('address-create/', views.address_create, name='address-create'),
+    path('delete-address/<id>/', views.delete_address, name='delete-address'),
 ]

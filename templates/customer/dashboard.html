@@ -7,7 +7,7 @@
     <div class="page-header breadcrumb-wrap">
         <div class="container">
             <div class="breadcrumb">
-                <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                <a href="{% url "store:index" %}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
                 <span></span> Pages <span></span> My Account
             </div>
         </div>
@@ -116,39 +116,29 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+                                <div class="tab-pane fade" id="address-detail" role="tabpanel" aria-labelledby="address-tab">
                                     <div class="row">
+                                        {% for i in addresses %}
                                         <div class="col-lg-6">
                                             <div class="card mb-3 mb-lg-0">
                                                 <div class="card-header">
-                                                    <h3 class="mb-0">Billing Address</h3>
+                                                    <h3 class="mb-0">Shipping Address</h3>
                                                 </div>
                                                 <div class="card-body">
                                                     <address>
-                                                        3522 Interstate<br />
-                                                        75 Business Spur,<br />
-                                                        Sault Ste. <br />Marie, MI 49783
+                                                        <strong>Full Name:&nbsp;&nbsp;</strong>{{i.full_name}}<br />
+                                                        <strong>Email:&nbsp;&nbsp;</strong>{{i.email}}<br />
+                                                        <strong>Mobile:&nbsp;&nbsp;</strong>{{i.mobile}}<br />
+                                                        <strong>Address:&nbsp;&nbsp;</strong>{{i.address}}<br />
+                                                        <strong>City:&nbsp;&nbsp;</strong>{{i.city}}<br />
+                                                        <strong>State:&nbsp;&nbsp;</strong>{{i.state}}<br />
                                                     </address>
-                                                    <p>New York</p>
-                                                    <a href="#" class="btn-small">Edit</a>
+                                                    <p><strong>Country:&nbsp;&nbsp;</strong>{{i.country}}</p>
+                                                    <a href="#" class="btn-small">Edit</a> <br> <a href="{% url "customer:address-detail" i.id %}" class="btn-small">View</a> <br> <a href="{% url "customer:delete-address" i.id %}" class="btn-small">Delete</a>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6">
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    <h5 class="mb-0">Shipping Address</h5>
-                                                </div>
-                                                <div class="card-body">
-                                                    <address>
-                                                        4299 Express Lane<br />
-                                                        Sarasota, <br />FL 34249 USA <br />Phone: 1.941.227.4444
-                                                    </address>
-                                                    <p>Sarasota</p>
-                                                    <a href="#" class="btn-small">Edit</a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">

@@ -18,6 +18,7 @@ def dashboard(request):
         'orders': orders,
         'total_spent': total_spent,
         'notis': notis,
+        'addresses': addresses,
     }
 
     return render(request, 'customer/dashboard.html', context)
@@ -43,6 +44,7 @@ def remove_from_wishlist(request, id):
     return redirect('customer:wishlist')
 
 
+@login_required
 def add_to_wishlist(request, id):
     if request.user.is_authenticated:
         product = store_models.Product.objects.filter(id=id).first()
@@ -65,3 +67,89 @@ def mark_notification_seen(request, id):
 
     messages.success(request, 'Notification maked as seen')
     return redirect('customer:dashboard')
+
+
+@login_required
+def addresses(request):
+    addresses = customer_models.Address.objects.filter(user=request.user)
+
+    context = {
+        'addresses': addresses,
+    }
+
+    return render(request, 'customer/addresses.html', context)
+
+
+@login_required
+def address_detail(request, id):
+    address = customer_models.Address.objects.get(user=request.user, id=id)
+
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        mobile = request.POST.get('mobile')
+        email = request.POST.get('email')
+        country = request.POST.get('country')
+        state = request.POST.get('state')
+        city = request.POST.get('city')
+        address_location = request.POST.get('address')
+        zip_code = request.POST.get('zip_code')
+
+        address.full_name = full_name
+        address.mobile = mobile
+        address.email = email
+        address.country = country
+        address.state = state
+        address.city = city
+        address.address = address_location
+        address.zip_code = zip_code
+        address.save()
+
+        messages.success(request, 'Address Updated')
+        return redirect('customer:addresses')
+    
+    context = {
+        'address': address
+    }
+
+    return render(request, 'customer/address-detail.html', context)
+
+
+@login_required
+def address_create(request):
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        mobile = request.POST.get('mobile')
+        email = request.POST.get('email')
+        country = request.POST.get('country')
+        state = request.POST.get('state')
+        city = request.POST.get('city')
+        address_location = request.POST.get('address')
+        zip_code = request.POST.get('zip_code')
+
+        customer_models.Address.objects.create(
+            user = request.user,
+            full_name = full_name,
+            mobile = mobile,
+            email = email,
+            country = country,
+            state = state,
+            city = city,
+            address = address_location,
+            zip_code = zip_code,
+        )
+
+        messages.success(request, 'Address Created')
+        return redirect('customer:addresses')
+
+    return render(request, 'customer/address-create.html')
+
+
+@login_required
+def delete_address(request, id):
+    address = customer_models.Address.objects.get(user=request.user, id=id)
+    address.delete()
+
+    messages.success(request, 'Address Deleted')
+    return redirect('customer:addresses')
+
+
