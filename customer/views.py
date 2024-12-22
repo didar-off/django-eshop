@@ -13,12 +13,15 @@ def dashboard(request):
     orders = store_models.Order.objects.filter(customer=request.user)
     total_spent = store_models.Order.objects.filter(customer=request.user).aggregate(total = models.Sum('total'))['total']
     notis = customer_models.Notification.objects.filter(user=request.user, seen=False)
+    addresses = customer_models.Address.objects.filter(user=request.user)
+    profile = request.user.profile
 
     context = {
         'orders': orders,
         'total_spent': total_spent,
         'notis': notis,
         'addresses': addresses,
+        'profile': profile,
     }
 
     return render(request, 'customer/dashboard.html', context)
@@ -70,17 +73,6 @@ def mark_notification_seen(request, id):
 
 
 @login_required
-def addresses(request):
-    addresses = customer_models.Address.objects.filter(user=request.user)
-
-    context = {
-        'addresses': addresses,
-    }
-
-    return render(request, 'customer/addresses.html', context)
-
-
-@login_required
 def address_detail(request, id):
     address = customer_models.Address.objects.get(user=request.user, id=id)
 
@@ -104,8 +96,8 @@ def address_detail(request, id):
         address.zip_code = zip_code
         address.save()
 
-        messages.success(request, 'Address Updated')
-        return redirect('customer:addresses')
+        messages.success(request, 'Address was updated successfully')
+        return redirect('customer:dashboard')
     
     context = {
         'address': address
@@ -138,8 +130,8 @@ def address_create(request):
             zip_code = zip_code,
         )
 
-        messages.success(request, 'Address Created')
-        return redirect('customer:addresses')
+        messages.success(request, 'Address was created successfully')
+        return redirect('customer:dashboard')
 
     return render(request, 'customer/address-create.html')
 
@@ -149,7 +141,27 @@ def delete_address(request, id):
     address = customer_models.Address.objects.get(user=request.user, id=id)
     address.delete()
 
-    messages.success(request, 'Address Deleted')
-    return redirect('customer:addresses')
+    messages.success(request, 'Address was deleted successfully')
+    return redirect('customer:dashboard')
 
 
+@login_required
+def update_profile(request):
+    profile = request.user.profile
+
+    if request.method == 'POST':
+        image = request.FILES.get('image')
+        full_name = request.POST.get('full_name')
+        mobile = request.POST.get('mobile')
+
+        if image:
+            profile.image = image
+
+        profile.full_name = full_name
+        profile.mobile = mobile
+        profile.save()
+
+        messages.success(request, 'Profile Updated Successfully')
+        return redirect('customer:dashboard')
+
+    return redirect('customer:dashboard')
