@@ -69,6 +69,37 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="pagination-area mt-20 mb-20">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            {% if wishlist.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{wishlist.previous_page_number}}"><i class="fi-rs-arrow-small-left"></i></a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link"><i class="fi-rs-arrow-small-left"></i></a>
+                            </li>
+                            {% endif %}
+
+                            {% for num in wishlist.paginator.page_range %}
+                            <li class="page-item {% if wishlist.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{num}}">{{num}}</a>
+                            </li>
+                            {% endfor %}
+
+                            {% if wishlist.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{wishlist.next_page_number}}"><i class="fi-rs-arrow-small-right"></i></a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link"><i class="fi-rs-arrow-small-right"></i></a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>

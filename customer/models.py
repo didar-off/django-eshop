@@ -44,7 +44,7 @@ class Address(models.Model):
         verbose_name_plural = 'Addresses'
 
     def __str__(self):
-        return self.user.username
+        return self.address
     
 
 class Notification(models.Model):

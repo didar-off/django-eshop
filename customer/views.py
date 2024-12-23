@@ -5,19 +5,23 @@ from django.db import models
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 
+from plugins.paginate_queryset import paginate_queryset
 from store import models as store_models
 from customer import models as customer_models
 
 
 @login_required
 def dashboard(request):
-    orders = store_models.Order.objects.filter(customer=request.user)
+    orders_list = store_models.Order.objects.filter(customer=request.user)
+    orders = paginate_queryset(request, orders_list, 3)
+
     total_spent = store_models.Order.objects.filter(customer=request.user).aggregate(total = models.Sum('total'))['total']
     notis = customer_models.Notification.objects.filter(user=request.user, seen=False)
     addresses = customer_models.Address.objects.filter(user=request.user)
     profile = request.user.profile
 
     context = {
+        'orders_list': orders_list,
         'orders': orders,
         'total_spent': total_spent,
         'notis': notis,
@@ -30,9 +34,11 @@ def dashboard(request):
 
 @login_required
 def wishlist(request):
-    wishlist = customer_models.Wishlist.objects.filter(user=request.user)
+    wishlist_list = customer_models.Wishlist.objects.filter(user=request.user)
+    wishlist = paginate_queryset(request, wishlist_list, 1)
 
     context = {
+        'wishlist_list': wishlist_list,
         'wishlist': wishlist,
     }
 

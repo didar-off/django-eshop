@@ -103,6 +103,37 @@
                                                 </table>
                                             </div>
                                         </div>
+                                        <div class="pagination-area mt-20 mb-20">
+                                            <nav aria-label="Page navigation example">
+                                                <ul class="pagination justify-content-start">
+                                                    {% if orders.has_previous %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page={{orders.previous_page_number}}"><i class="fi-rs-arrow-small-left"></i></a>
+                                                    </li>
+                                                    {% else %}
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link"><i class="fi-rs-arrow-small-left"></i></a>
+                                                    </li>
+                                                    {% endif %}
+                        
+                                                    {% for num in orders.paginator.page_range %}
+                                                    <li class="page-item {% if orders.number == num %}active{% endif %}">
+                                                        <a class="page-link" href="?page={{num}}">{{num}}</a>
+                                                    </li>
+                                                    {% endfor %}
+                        
+                                                    {% if orders.has_next %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?page={{orders.next_page_number}}"><i class="fi-rs-arrow-small-right"></i></a>
+                                                    </li>
+                                                    {% else %}
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link"><i class="fi-rs-arrow-small-right"></i></a>
+                                                    </li>
+                                                    {% endif %}
+                                                </ul>
+                                            </nav>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">

@@ -15,7 +15,7 @@ USER_TYPE = (
 
 class UserRegisterForm(UserCreationForm):
     full_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-group', 'placeholder': 'Full Name'}), required=True)
-    mobile = PhoneNumberField(widget=forms.TextInput(attrs={'class': 'form-group', 'placeholder': 'Phone Number'}), required=True)
+    mobile = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-group', 'placeholder': 'Phone Number'}), required=True)
     email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-group', 'placeholder': 'Email'}), required=True)
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-group', 'placeholder': 'Password'}), required=True)
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-group', 'placeholder': 'Confirm Password'}), required=True)

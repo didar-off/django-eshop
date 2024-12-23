@@ -4,7 +4,7 @@ from customer import models as customer_models
 
 
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ['user', 'full_name']
+    list_display = ['user', 'full_name', 'address', 'country']
 
 
 class WishlistAdmin(admin.ModelAdmin):
