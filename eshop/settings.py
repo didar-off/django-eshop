@@ -216,6 +216,10 @@ RECAPTCHA_PUBLIC_KEY = env('DJANGO_RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = env('DJANGO_RECAPTCHA_PRIVATE_KEY')
 
 
+LOGOUT_REDIRECT_URL = "userauths:sign-in"
+LOGIN_URL = "userauths:sign-in"
+
+
 # Set Messages in settings.py
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',

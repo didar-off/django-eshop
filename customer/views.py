@@ -8,6 +8,7 @@ from django.contrib.auth.hashers import check_password
 from store import models as store_models
 from customer import models as customer_models
 
+
 @login_required
 def dashboard(request):
     orders = store_models.Order.objects.filter(customer=request.user)
@@ -164,4 +165,28 @@ def update_profile(request):
         messages.success(request, 'Profile Updated Successfully')
         return redirect('customer:dashboard')
 
+    return redirect('customer:dashboard')
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+        confirm_new_password = request.POST.get('confirm_new_password')
+
+        if confirm_new_password != new_password:
+            messages.error(request, 'Confirm password and new password Does Not Match')
+            return redirect('customer:change-password')
+
+        if check_password(old_password, request.user.password):
+            request.user.set_password(new_password)
+            request.user.save()
+            messages.success(request, 'Password Changed Successfully')
+            return redirect('customer:dashboard')
+        else:
+            messages.error(request, 'Old password is Incorrect')
+            return redirect('customer:change-password')
+    
+    
     return redirect('customer:dashboard')
