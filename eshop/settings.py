@@ -59,7 +59,7 @@ INSTALLED_APPS = [
 
     # Third Party Apps
     'anymail',
-    'phonenumber_field',
+    # 'phonenumber_field',
     'django_ckeditor_5',
     'captcha',
 ]

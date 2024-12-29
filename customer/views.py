@@ -13,7 +13,7 @@ from customer import models as customer_models
 @login_required
 def dashboard(request):
     orders_list = store_models.Order.objects.filter(customer=request.user)
-    orders = paginate_queryset(request, orders_list, 3)
+    orders = paginate_queryset(request, orders_list, 1)
 
     total_spent = store_models.Order.objects.filter(customer=request.user).aggregate(total = models.Sum('total'))['total']
     notis = customer_models.Notification.objects.filter(user=request.user, seen=False)

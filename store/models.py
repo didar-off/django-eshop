@@ -227,7 +227,7 @@ class Order(models.Model):
     """
     Represents an order placed by a customer.
     """
-    vendor = models.ManyToManyField(user_models.User, blank=True)
+    vendors = models.ManyToManyField(user_models.User, blank=True)
     customer = models.ForeignKey(user_models.User, on_delete=models.SET_NULL, null=True, blank=True, related_name='orders')
 
     sub_total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, null=True, blank=True)
