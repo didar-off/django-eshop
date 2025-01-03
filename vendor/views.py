@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.db import models
 from django.db.models.functions import TruncMonth
 
+from django.contrib import messages
+
 from store import models as store_models
 from vendor import models as vendor_models
 
@@ -53,3 +55,72 @@ def products(request):
     }
 
     return render(request, 'vendor/products.html', context)
+
+
+@login_required
+def orders(request):
+    orders = store_models.Order.objects.filter(vendors=request.user, payment_status='Paid')
+
+    context = {
+        'orders': orders
+    }
+
+    return render(request, 'vendor/orders.html', context)
+
+
+@login_required
+def order_detail(request, order_id):
+    order = store_models.Order.objects.get(vendors=request.user, order_id=order_id, payment_status='Paid')
+
+    context = {
+        'order': order
+    }
+
+    return render(request, 'vendor/order-detail.html', context)
+
+
+@login_required
+def order_item_detail(request, order_id, item_id):
+    order = store_models.Order.objects.get(vendors=request.user, order_id=order_id, payment_status='Paid')
+    item = store_models.OrderItem.objects.get(item_id=item_id, order=order)
+
+    context = {
+        'order': order, 
+        'item': item, 
+    }
+
+    return render(request, 'vendor/order-item-detail.html', context)
+
+
+@login_required
+def update_order_status(request, order_id):
+    order = store_models.Order.objects.get(vendors=request.user, order_id=order_id, payment_status='Paid')
+
+    if request.method == 'POST':
+        order_status = request.POST.get('order_status')
+        order.order_status = order_status
+        order.save()
+        
+        messages.success(request, 'Order status updated')
+        return redirect('vendor:order-detail', order.order_id)
+
+
+@login_required
+def update_order_item_status(request, order_id, item_id):
+    order = store_models.Order.objects.get(vendors=request.user, order_id=order_id, payment_status='Paid')
+    item = store_models.OrderItem.objects.get(item_id=item_id, order=order)
+
+    if request.method == 'POST':
+        order_status = request.POST.get('order_status')
+        shipping_service = request.POST.get('shipping_service')
+        tracking_id = request.POST.get('tracking_id')
+
+        item.order_status = order_status
+        item.shipping_service = shipping_service
+        item.tracking_id = tracking_id
+        item.save()
+        
+        messages.success(request, 'Order status updated')
+        return redirect('vendor:order-detail', order.order_id, item.item_id)
+    
+    return redirect('vendor:order-item-detail', order.order_id, item.item_id)
