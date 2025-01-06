@@ -180,7 +180,7 @@ def create_order(request):
         address_id = request.POST.get('address')
 
         if not address_id:
-            messages.warning(request, 'Please select an address to continue')
+            messages.warning(request, 'Please create or select an address to continue')
             return redirect('store:cart')
         
         address = customer_models.Address.objects.filter(user=request.user, id=address_id).first()
@@ -220,7 +220,7 @@ def create_order(request):
                 vendor = i.product.vendor,
             )
 
-            order.vendor.add(i.product.vendor)
+            order.vendors.add(i.product.vendor)
 
     return redirect('store:checkout', order.order_id)
 

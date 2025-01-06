@@ -41,6 +41,7 @@ ORDER_STATUS = (
 
 
 SHIPPING_SERVICE = (
+    ('By Vendor', 'By Vendor'),
     ('DHL', 'DHL'),
     ('FedX', 'FedX'),
     ('UPS', 'UPS'),
@@ -272,7 +273,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
     order_status = models.CharField(max_length=100, choices=ORDER_STATUS, default='Pending')
-    shipping_service = models.CharField(max_length=100, choices=SHIPPING_SERVICE, default=None, null=True, blank=True)
+    shipping_service = models.CharField(max_length=100, choices=SHIPPING_SERVICE, default='By Vendor', null=True, blank=True)
     tracking_id = models.CharField(max_length=100, default=None, null=True, blank=True)
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

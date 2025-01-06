@@ -1,0 +1,101 @@
+{% extends "vendor/main.html" %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+
+
+    <section class="content-main">
+        <div class="content-header">
+            <a href="{% url "vendor:order-detail" order.order_id %}"><i class="material-icons md-arrow_back"></i> Go back </a>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header bg-brand-2" style="height: 150px"></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xl col-lg flex-grow-0" style="flex-basis: 230px">
+                        <div class="img-thumbnail shadow w-100 bg-white position-relative text-center" style="height: 190px; width: 200px; margin-top: -120px">
+                            <img src="{{item.product.image.url}}" class="center-xy img-fluid" alt="Product Logo" />
+                        </div>
+                    </div>
+                    <!--  col.// -->
+                    <div class="col-xl col-lg">35 10
+                        <h3>{{item.product.name}}</h3>
+                        <p>{{item.product.short_inf|safe}}</p>
+                    </div>
+                    <!--  col.// -->
+                    <div class="col-xl-4 text-md-end">
+                        <form action="{% url 'vendor:update-order-item-status' order.order_id item.item_id %}" method="post">
+                            {% csrf_token %}
+                            <select class="form-select d-inline-block mb-lg-0 mr-5 mw-200" name="order_status">
+                                <option>Change status</option>
+                                <option {% if order.order_status == 'Pending' %} selected {% endif %} value="Pending">Pending</option>
+                                <option {% if order.order_status == 'Processing' %} selected {% endif %} value="Processing"> Processing</option>
+                                <option {% if order.order_status == 'Shipped' %} selected {% endif %} value="Shipped"> Shipped</option>
+                                <option {% if order.order_status == 'Fulfilled' %} selected {% endif %} value="Fulfilled"> Fulfilled</option>
+                                <option {% if order.order_status == 'Cancelled' %} selected {% endif %} value="Cancelled"> Cancelled</option>
+                            </select>
+                        </form>
+                        <button class="btn btn-primary"> View live <i class="material-icons md-launch"></i> </button>
+                    </div>
+                    <!--  col.// -->
+                </div>
+                <!-- card-body.// -->
+                <hr class="my-4" />
+                <div class="row g-4">
+                    <div class="col-md-12 col-lg-4 col-xl-2">
+                        <article class="box">
+                            <p class="mb-0 text-muted">Price:</p>
+                            <h5 class="text-success">${{item.product.price}}</h5>
+                            <p class="mb-0 text-muted">Shipping:</p>
+                            <h5 class="text-success mb-0">${{item.product.shipping}}</h5>
+                        </article>
+                    </div>
+                    <!--  col.// -->
+                    <div class="col-sm-6 col-lg-4 col-xl-3">
+                        <h6>Contacts</h6>
+                        <p>
+                            Customer Name: {{order.customer.profile.full_name}}<br />
+                            Customer Email: {{order.customer.email}}<br />
+                            Customer Phone: {{order.customer.profile.mobile}}</p>
+                    </div>
+                    <!--  col.// -->
+                    <div class="col-sm-6 col-lg-4 col-xl-3">
+                        <h6>Location</h6>
+                        <p>
+                            Address: {{order.address}} <br />
+                            Country: {{order.address.country}} <br />
+                            Zip code: {{order.address.zip_code}}
+                        </p>
+                    </div>
+                    <!--  col.// -->
+                    <div class="col-sm-6 col-xl-4 text-xl-end">
+                        <map class="mapbox position-relative d-inline-block">
+                            <img src="{% static 'vendor/assets/imgs/misc/map.jpg' %}" class="rounded2" height="120" alt="map" />
+                            <span class="map-pin" style="top: 50px; left: 100px"></span>
+                            <button class="btn btn-sm btn-brand position-absolute bottom-0 end-0 mb-15 mr-15 font-xs">Large</button>
+                        </map>
+                    </div>
+                    <!--  col.// -->
+                </div>
+                <!--  row.// -->
+            </div>
+            <!--  card-body.// -->
+        </div>
+    </section>
+    <!-- content-main end// -->
+    <footer class="main-footer font-xs">
+        <div class="row pb-30 pt-15">
+            <div class="col-sm-6">
+                <script>
+                    document.write(new Date().getFullYear());
+                </script>
+                &copy; Nest - HTML Ecommerce Template .
+            </div>
+            <div class="col-sm-6">
+                <div class="text-sm-end">All rights reserved</div>
+            </div>
+        </div>
+    </footer>
+</main>
+
+{% endblock content %}

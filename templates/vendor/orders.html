@@ -47,7 +47,8 @@
                                 <th scope="col">Name</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Total</th>
-                                <th scope="col">Status</th>
+                                <th scope="col">Payment Status</th>
+                                <th scope="col">Order Status</th>
                                 <th scope="col">Date</th>
                                 <th scope="col" class="text-end">Action</th>
                             </tr>
@@ -60,6 +61,7 @@
                                 <td>{{i.customer.email}}</td>
                                 <td>${{i.total}}</td>
                                 <td><span class="badge rounded-pill alert-success">{{i.payment_status}}</span></td>
+                                <td><span class="badge rounded-pill alert-{% if i.order_status == 'Shipped' %}success{% elif i.order_status == 'Cancelled' %}danger{% else %}warning{% endif %}">{{i.order_status}}</span></td>
                                 <td>{{i.date}}</td>
                                 <td class="text-end">
                                     <a href="{% url "vendor:order-detail" i.order_id %}" class="btn btn-outline-success">Detail</a>
