@@ -121,6 +121,6 @@ def update_order_item_status(request, order_id, item_id):
         item.save()
         
         messages.success(request, 'Order status updated')
-        return redirect('vendor:order-detail', order.order_id, item.item_id)
+        return redirect('vendor:order-item-detail', order.order_id, item.item_id)
     
     return redirect('vendor:order-item-detail', order.order_id, item.item_id)
