@@ -1,0 +1,63 @@
+{% extends "vendor/main.html" %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Coupon (#{{coupons.count}})</h2>
+            <p>Date: </p>
+        </div>
+        <div>
+            <a class="btn btn-outline-success" href="">Add Coupon</a>
+        </div>
+    </div>
+    <div class="card">
+        {% for i in coupons %}
+        <header class="card-header">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
+                    <h3>{{i.code}}</h3> <br />
+                    <strong>Discount:<strong> <b class="text-muted">&nbsp;{{i.discount}}%</b>
+                </div>
+                <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                </div>
+            </div>
+        </header>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="table-responsive">
+                        <form action="{% url "vendor:update-coupon" i.id %}" method="post">
+                            {% csrf_token %}
+                            <input class="form-control mb-2 rounded" type="text" name="coupon_code" value="{{i.code}}"> <br>
+                            <button type="submit" class="btn btn-outline-danger">Delete Coupon</button>&nbsp;&nbsp;
+                            <a type="submit" class="btn btn-outline-success">Save Changes</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- card end// -->
+</section>
+<!-- content-main end// -->
+<footer class="main-footer font-xs">
+    <div class="row pb-30 pt-15">
+        <div class="col-sm-6">
+            <script>
+                document.write(new Date().getFullYear());
+            </script>
+            &copy; Nest - HTML Ecommerce Template .
+        </div>
+        <div class="col-sm-6">
+            <div class="text-sm-end">All rights reserved</div>
+        </div>
+    </div>
+</footer>
+</main>
+
+{% endblock content %}

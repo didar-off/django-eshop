@@ -131,7 +131,6 @@
                 <br />
             </nav>
         </aside>
-
         <main class="main-wrap">
             <header class="main-header navbar">
                 <div class="col-search">
@@ -187,6 +186,12 @@
                     </ul>
                 </div>
             </header>
+            
+            {% for message in messages %}
+                <div class="alert alert-{{message.tags}}">
+                    <strong>{{message}}</strong>
+                </div>
+            {% endfor %}
         
 
         {% block content %}

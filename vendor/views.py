@@ -124,3 +124,47 @@ def update_order_item_status(request, order_id, item_id):
         return redirect('vendor:order-item-detail', order.order_id, item.item_id)
     
     return redirect('vendor:order-item-detail', order.order_id, item.item_id)
+
+
+@login_required
+def coupons(request):
+    coupons = store_models.Coupon.objects.filter(vendor=request.user)
+
+    context = {
+        'coupons': coupons
+    }
+
+    return render(request, 'vendor/coupons.html', context)
+
+
+@login_required
+def update_coupon(request, id):
+    coupon = store_models.Coupon.objects.get(vendor=request.user, id=id)
+
+    if request.method == 'POST':
+        code = request.POST.get("coupon_code")
+        coupon.code = code
+        coupon.save()
+
+    messages.success(request, 'Coupon updated')
+    return redirect('vendor:coupons')
+
+
+@login_required
+def delete_coupon(request, id):
+    coupon = store_models.Coupon.objects.get(vendor=request.user, id=id)
+    coupon.delete()
+
+    messages.success(request, 'Coupon deleted')
+    return redirect('vendpr:coupons')
+
+
+@login_required
+def create_coupon(request):
+    if request.method == 'POST':
+        code = request.GET.get('coupon_code')
+        discount = request.GET.get('discount')
+        store_models.Coupon.objects.create(vendor=request.user, code=code, discount=discount)
+
+    messages.success(request, 'Coupon created')
+    return redirect('vendor:coupons')
