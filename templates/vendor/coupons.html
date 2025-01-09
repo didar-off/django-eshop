@@ -8,10 +8,9 @@
     <div class="content-header">
         <div>
             <h2 class="content-title card-title">Coupon (#{{coupons.count}})</h2>
-            <p>Date: </p>
         </div>
         <div>
-            <a class="btn btn-outline-success" href="">Add Coupon</a>
+            <button class="btn btn-md rounded font-sm">Add Coupon</button>
         </div>
     </div>
     <div class="card">
@@ -33,8 +32,12 @@
                         <form action="{% url "vendor:update-coupon" i.id %}" method="post">
                             {% csrf_token %}
                             <input class="form-control mb-2 rounded" type="text" name="coupon_code" value="{{i.code}}"> <br>
-                            <button type="submit" class="btn btn-outline-danger">Delete Coupon</button>&nbsp;&nbsp;
-                            <a type="submit" class="btn btn-outline-success">Save Changes</a>
+                            <button type="submit" class="btn btn-md rounded font-sm">Save Changes</button>
+                        </form>
+                        <br>
+                        <form action="{% url "vendor:delete-coupon" i.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-md rounded font-sm">Delete Coupon</button>
                         </form>
                     </div>
                 </div>
@@ -44,20 +47,6 @@
     </div>
     <!-- card end// -->
 </section>
-<!-- content-main end// -->
-<footer class="main-footer font-xs">
-    <div class="row pb-30 pt-15">
-        <div class="col-sm-6">
-            <script>
-                document.write(new Date().getFullYear());
-            </script>
-            &copy; Nest - HTML Ecommerce Template .
-        </div>
-        <div class="col-sm-6">
-            <div class="text-sm-end">All rights reserved</div>
-        </div>
-    </div>
-</footer>
-</main>
+
 
 {% endblock content %}

@@ -22,4 +22,8 @@ urlpatterns = [
     path('update-coupon/<id>/', views.update_coupon, name='update-coupon'),
     path('delete-coupon/<id>/', views.delete_coupon, name='delete-coupon'),
     path('create-coupon/', views.create_coupon, name='create-coupon'),
+
+    # Reviews
+    path('reviews/', views.reviews, name='reviews'),
+    path('update-reply/', views.update_reply, name='update-reply'),
 ]

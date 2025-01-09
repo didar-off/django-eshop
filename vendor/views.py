@@ -156,7 +156,7 @@ def delete_coupon(request, id):
     coupon.delete()
 
     messages.success(request, 'Coupon deleted')
-    return redirect('vendpr:coupons')
+    return redirect('vendor:coupons')
 
 
 @login_required
@@ -168,3 +168,36 @@ def create_coupon(request):
 
     messages.success(request, 'Coupon created')
     return redirect('vendor:coupons')
+
+
+@login_required
+def reviews(request):
+    reviews = store_models.Review.objects.filter(product__vendor=request.user)
+
+    rating = request.GET.get('rating')
+    date = request.GET.get('date')
+
+    if rating:
+        reviews = reviews.filter(rating=rating)
+
+    if date:
+        reviews = reviews.order_by(date)
+
+    context = {
+        'reviews': reviews,
+    }
+
+    return render(request, 'vendor/reviews.html', context)
+
+
+@login_required
+def update_reply(request, id):
+    review = store_models.Review.objects.get(id=id)
+
+    if request.method == 'POST':
+        reply = request.POST.get('reply')
+        review.reply = reply
+        review.save()
+
+    messages.success(request, 'Reply added')
+    return redirect('vendor:reviews')

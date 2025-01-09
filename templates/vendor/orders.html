@@ -64,11 +64,7 @@
                                 <td><span class="badge rounded-pill alert-{% if i.order_status == 'Shipped' %}success{% elif i.order_status == 'Cancelled' %}danger{% else %}warning{% endif %}">{{i.order_status}}</span></td>
                                 <td>{{i.date}}</td>
                                 <td class="text-end">
-                                    <a href="{% url "vendor:order-detail" i.order_id %}" class="btn btn-outline-success">Detail</a>
-                                    <div class="dropdown">
-                                        <a class="btn btn-outline-danger" href="{% url "vendor:order-detail" i.order_id %}">Delete</a>
-                                    </div>
-                                    <!-- dropdown //end -->
+                                    <a href="{% url "vendor:order-detail" i.order_id %}" class="btn btn-md rounded font-sm">Detail</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -95,20 +91,6 @@
             </nav>
         </div>
     </section>
-    <!-- content-main end// -->
-    <footer class="main-footer font-xs">
-        <div class="row pb-30 pt-15">
-            <div class="col-sm-6">
-                <script>
-                    document.write(new Date().getFullYear());
-                </script>
-                &copy; Nest - HTML Ecommerce Template .
-            </div>
-            <div class="col-sm-6">
-                <div class="text-sm-end">All rights reserved</div>
-            </div>
-        </div>
-    </footer>
-</main>
+
 
 {% endblock content %}
