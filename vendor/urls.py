@@ -30,4 +30,8 @@ urlpatterns = [
     # Notifications
     path('notifications/', views.notis, name='notifications'),
     path('mark-notification-seen/<id>/', views.mark_notis_seen, name='mark-notification-seen'),
+
+    # Profile
+    path('profile/', views.profile, name='profile'),
+    path('change-password/', views.change_password, name='change-password'),
 ]

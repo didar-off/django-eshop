@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password
 from django.db import models
 from django.db.models.functions import TruncMonth
 
 from django.contrib import messages
 
 from store import models as store_models
+from customer import models as customer_models
 from vendor import models as vendor_models
 
 
@@ -222,3 +224,61 @@ def mark_notis_seen(request, id):
 
     messages.success(request, 'Notification Marked as Seen')
     return redirect('vendor:notifications')
+
+
+@login_required
+def delete_address(request, id):
+    address = customer_models.Address.objects.get(user=request.user, id=id)
+    address.delete()
+
+    messages.success(request, 'Address was deleted successfully')
+    return redirect('customer:dashboard')
+
+
+@login_required
+def profile(request):
+    profile = request.user.profile
+
+    if request.method == 'POST':
+        image = request.FILES.get('image')
+        full_name = request.POST.get('full_name')
+        mobile = request.POST.get('mobile')
+
+        if image:
+            profile.image = image
+
+        profile.full_name = full_name
+        profile.mobile = mobile
+        profile.save()
+
+        messages.success(request, 'Profile Updated Successfully')
+        return redirect('vendor:profile')
+
+    context = {
+        'profile': profile
+    }
+
+    return render(request, 'vendor/profile.html', context)
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+        confirm_new_password = request.POST.get('confirm_new_password')
+
+        if confirm_new_password != new_password:
+            messages.error(request, 'Confirm password and new password Does Not Match')
+            return redirect('vendor:change-password')
+
+        if check_password(old_password, request.user.password):
+            request.user.set_password(new_password)
+            request.user.save()
+            messages.success(request, 'Password Changed Successfully')
+            return redirect('vendor:dashboard')
+        else:
+            messages.error(request, 'Old password is Incorrect')
+            return redirect('vendor:change-password')
+    
+    return render(request, 'vendor/change-password.html')
