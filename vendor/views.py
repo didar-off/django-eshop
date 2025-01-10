@@ -201,3 +201,24 @@ def update_reply(request, id):
 
     messages.success(request, 'Reply added')
     return redirect('vendor:reviews')
+
+
+@login_required
+def notis(request):
+    notis = vendor_models.Notification.objects.filter(user=request.user, seen=False)
+
+    context = {
+        'notis': notis
+    }
+
+    return render(request, 'vendor/notifications.html', context)
+
+
+@login_required
+def mark_notis_seen(request, id):
+    noti = vendor_models.Notification.objects.get(user=request.user, id=id)
+    noti.seen = True
+    noti.save()
+
+    messages.success(request, 'Notification Marked as Seen')
+    return redirect('vendor:notifications')

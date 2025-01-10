@@ -7,7 +7,7 @@
 <section class="content-main">
     <div class="content-header">
         <div>
-            <h2 class="content-title card-title">Reviews (#{{reviews.count}})</h2>
+            <h2 class="content-title card-title">Notifications (#{{notis.count}})</h2>
             <p>Lorem ipsum dolor sit amet.</p>
         </div>
         <div>
@@ -43,37 +43,29 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th># ID</th>
-                            <th>Product</th>
-                            <th>User's Name</th>
-                            <th>Rating</th>
+                            <th># Message</th>
+                            <th>Product Name x QTY</th>
                             <th>Date</th>
                             <th class="text-end">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for i in reviews %}
+                        {% for i in notis %}
                         <tr>
-                            <td>{{i.id}}</td>
-                            <td><b>{{i.product.name}}</b></td>
-                            <td>{{i.user.username|title}}</td>
-                            <td>
-                                <ul class="rating-stars">
-                                    <li style="width: {{i.product.average_rating_percentage}}%" class="stars-active">
-                                        <img src="{% static 'vendor/assets/imgs/icons/stars-active.svg' %}" alt="stars" />
-                                    </li>
-                                    <li>
-                                        <img src="{% static 'vendor/assets/imgs/icons/starts-disable.svg' %}" alt="stars" />
-                                    </li>
-                                </ul>
-                            </td>
+                            <td>{{i.type}}</td>
+                            <td>{{i.order.product}} x {{i.order.qty}}</td>
                             <td>{{i.date|date:"d.m.Y"}}</td>
                             <td class="text-end">
-                                <a href="#" class="btn btn-md rounded font-sm">Detail</a>
+                                <a href="{% url "vendor:mark-notification-seen" i.id %}" class="btn btn-md rounded font-sm">Mark as Seen</a>
                                 <!-- dropdown //end -->
                             </td>
                         </tr>
                         {% endfor %}
+
+                        {% if not notis %}
+                            <strong>No Unread Notifications</strong><br>
+                        {% endif %}
+
                     </tbody>
                 </table>
             </div>

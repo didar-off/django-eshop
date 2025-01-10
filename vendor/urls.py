@@ -26,4 +26,8 @@ urlpatterns = [
     # Reviews
     path('reviews/', views.reviews, name='reviews'),
     path('update-reply/', views.update_reply, name='update-reply'),
+
+    # Notifications
+    path('notifications/', views.notis, name='notifications'),
+    path('mark-notification-seen/<id>/', views.mark_notis_seen, name='mark-notification-seen'),
 ]
