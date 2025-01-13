@@ -34,4 +34,7 @@ urlpatterns = [
     # Profile
     path('profile/', views.profile, name='profile'),
     path('change-password/', views.change_password, name='change-password'),
+
+    # Product Management
+    path('create-product/', views.create_product, name='create-product'),
 ]

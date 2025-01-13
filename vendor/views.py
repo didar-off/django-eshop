@@ -282,3 +282,38 @@ def change_password(request):
             return redirect('vendor:change-password')
     
     return render(request, 'vendor/change-password.html')
+
+
+@login_required
+def create_product(request):
+    categories = store_models.Category.objects.all()
+
+    if request.method == 'POST':
+        image = request.FILES.get('image')
+        name = request.POST.get('name')
+        category_id = request.POST.get('category_id') # slect value (category_id) from create-product.html
+        description = request.POST.get('description')
+        price = request.POST.get('price')
+        regular_price = request.POST.get('regular_price')
+        shipping = request.POST.get('shipping')
+        stock = request.POST.get('stock')
+
+        category = store_models.Category.objects.get(id=category_id)
+        product = store_models.Product.objects.create(
+            image = image,
+            name = name,
+            category = category,
+            description = description,
+            price = price,
+            regular_price = regular_price,
+            shipping = shipping,
+            stock = stock,
+        )
+
+        return redirect('vendor:update-product', product.id)
+    
+    context = {
+        'categories': categories
+    }
+
+    return render(request, 'vendor/create-product.html', context)
