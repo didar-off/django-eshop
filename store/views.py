@@ -31,7 +31,7 @@ razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZOR
 
 
 def index(request):
-    products = store_models.Product.objects.filter(status='Published')
+    products = store_models.Product.objects.filter(status='Published', featured=True)
     categories = store_models.Category.objects.all()
 
     context = {

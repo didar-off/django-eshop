@@ -37,4 +37,5 @@ urlpatterns = [
 
     # Product Management
     path('create-product/', views.create_product, name='create-product'),
+    path('update-product/<id>/', views.update_product, name='update-product'),
 ]

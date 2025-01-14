@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.db import models
@@ -292,6 +293,7 @@ def create_product(request):
         image = request.FILES.get('image')
         name = request.POST.get('name')
         category_id = request.POST.get('category_id') # slect value (category_id) from create-product.html
+        short_inf = request.POST.get('short_inf')
         description = request.POST.get('description')
         price = request.POST.get('price')
         regular_price = request.POST.get('regular_price')
@@ -300,9 +302,11 @@ def create_product(request):
 
         category = store_models.Category.objects.get(id=category_id)
         product = store_models.Product.objects.create(
+            vendor = request.user,
             image = image,
             name = name,
             category = category,
+            short_inf = short_inf,
             description = description,
             price = price,
             regular_price = regular_price,
@@ -317,3 +321,145 @@ def create_product(request):
     }
 
     return render(request, 'vendor/create-product.html', context)
+
+
+@login_required
+def update_product(request, id):
+    product = store_models.Product.objects.get(vendor=request.user, id=id)
+    categories = store_models.Category.objects.all()
+
+    if request.method == 'POST':
+        image = request.FILES.get('image')
+        name = request.POST.get('name')
+        category_id = request.POST.get('category_id') # slect value (category_id) from create-product.html
+        short_inf = request.POST.get('short_inf')
+        description = request.POST.get('description')
+        price = request.POST.get('price')
+        regular_price = request.POST.get('regular_price')
+        shipping = request.POST.get('shipping')
+        stock = request.POST.get('stock')
+
+        category = store_models.Category.objects.get(id=category_id)
+
+        product.name = name
+        product.category = category
+        product.description = description
+        product.short_inf = short_inf
+        product.price = price
+        product.regular_price = regular_price
+        product.shipping = shipping
+        product.stock = stock
+
+        if image:
+            product.image = image
+
+        product.save()
+
+        variant_ids = request.POST.getlist('variant_id[]')
+        variant_title = request.POST.getlist('variant_title[]')
+
+        # variant_ids = ['101', '102', ...]
+        # variant_title = ['Small', 'Medium', ...]
+
+        if variant_ids and variant_title:
+
+            for index, variant_id in enumerate(variant_ids):
+                variant_name = variant_title[index]
+
+                if variant_id:
+                    variant = store_models.Variant.objects.filter(id=variant_id).first()
+                    if variant:
+                        variant.name = variant_name
+                        variant.save()
+                else:
+                    variant = store_models.Variant.objects.create(product=product, name=variant_name)
+
+                item_ids = request.POST.getlist(f'item_id_{index}[]')
+                item_titles = request.POST.getlist(f'item_title_{index}[]')
+                item_descriptions = request.POST.getlist(f'item_description_{index}[]')
+
+                """
+                    item_ids = ['101', '102', '103']
+                    item_titles = ['Small', 'Medium', 'Large']
+                    item_description = ['Small size description', 'Medium size description', 'Large size description']
+                """
+
+                if item_ids and item_titles and item_descriptions:
+                    for j in range(len(item_titles)):
+
+                        item_id = item_ids[j]   # 101
+                        item_title = item_titles[j]   # Small
+                        item_description = item_descriptions[j]   # Small size description
+
+                        if item_id:
+                            variant_item = store_models.VariantItem.objects.filter(id=item_id).first()
+
+                            if variant_item:
+                                variant_item.title = item_title
+                                variant_item.description = item_description
+                                variant_item.save()
+                            else:
+                                store_models.VariantItem.objects.create(
+                                    variant = variant,
+                                    title = item_title,
+                                    description = item_description
+                                )
+
+        for file_key, image_file in request.FILES.items():
+
+            """
+                image_1
+                image_2
+                image_3
+                image_4
+            """
+
+            if file_key.startwith('image_'):
+                store_models.Gallery.objects.create(product = product,image = image_file)
+
+        messages.success(request, 'Product updated successfully')
+        return redirect('vendor:update-product', product.id)
+    
+    context = {
+        'product': product,
+        'categories': categories,
+        'variants': store_models.Variant.objects.filter(product=product),
+        'gallery_images': store_models.Gallery.objects.filter(product=product),
+    }
+
+    return render(request, 'vendor/update-product.html', context)
+
+
+@login_required
+def delete_variant(request, product_id, variant_id):
+    product = store_models.Product.objects.get(id=product_id)
+    variant = store_models.Variant.objects.get(id=variant_id, product__vendor=request.user, product=product)
+    variant.delete()
+
+    return JsonResponse({'message': 'Variant deleted'})
+
+
+@login_required
+def delete_variant_item(request, variant_id, item_id):
+    variant = store_models.Variant.objects.get(id=variant_id)
+    item = store_models.VariantItem.objects.get(variant=variant, id=item_id)
+    item.delete()
+
+    return JsonResponse({'message': 'Variant Item deleted'})
+
+
+@login_required
+def delete_product_image(request, product_id, image_id):
+    product = store_models.Product.objects.get(id=product_id)
+    image = store_models.Gallery.objects.get(id=image_id, product=product)
+    image.delete()
+
+    return JsonResponse({'message': 'Product Image deleted'})
+
+
+@login_required
+def delete_product(request, product_id):
+    product = store_models.Product.objects.get(id=product_id)
+    product.delete()
+
+    return redirect('vendor:products')

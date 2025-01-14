@@ -24,7 +24,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'vendor', 'price', 'regular_price', 'status', 'featured', 'stock', 'date']  # Исправлено здесь
+    list_display = ['name', 'category', 'stock', 'price', 'regular_price', 'status', 'featured', 'vendor', 'date']  # Исправлено здесь
     search_fields = ['name', 'category__title']
     list_filter = ['status', 'featured', 'category', 'price', 'stock']
     inlines = [GalleryInline, VariantInline]

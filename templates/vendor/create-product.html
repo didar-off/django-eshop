@@ -22,8 +22,12 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-4">
-                            <label for="productTitle" class="form-label">Product title</label>
-                            <input name="name" type="text" placeholder="Type here" class="form-control" id="productTitle" />
+                            <label class="form-label">Product title</label>
+                            <input name="name" type="text" placeholder="Type here" class="form-control" />
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Short information</label>
+                            <textarea name="short_inf" placeholder="Type here" class="form-control" rows="4"></textarea>
                         </div>
                         <div class="mb-4">
                             <label class="form-label">Full description</label>
@@ -32,31 +36,27 @@
                         <div class="row">
                             <div class="col-lg-4">
                                 <div class="mb-4">
-                                    <label for="productPrice" class="form-label">Regular price</label>
-                                    <div class="row gx-2">
-                                        <input name="regular_price" id="productPrice" placeholder="$" type="text" class="form-control" />
-                                    </div>
+                                    <label class="form-label">Sale price</label>
+                                    <input name="price" placeholder="$" type="number" class="form-control" min="0"/>
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="mb-4">
-                                    <label for="productPrice" class="form-label">Sale price</label>
-                                    <input name="price" id="productPrice" placeholder="$" type="text" class="form-control" />
+                                    <label class="form-label">Regular price</label>
+                                    <div class="row gx-2">
+                                        <input name="regular_price" placeholder="$" type="number" class="form-control" min="0"/>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-4">
-                                <label for="productPrice" class="form-label">Stock</label>
-                                <input name="stock" id="productPrice" placeholder="Amount" type="text" class="form-control" />
+                                <label class="form-label">Stock</label>
+                                <input name="stock" placeholder="Amount" type="number" class="form-control" min="0"/>
                             </div>
                         </div>
-                        <div class="mb-4">
+                        <!-- <div class="mb-4">
                             <label class="form-label">Tax rate</label>
-                            <input type="text" placeholder="%" class="form-control" id="product_name" />
-                        </div>
-                        <label class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" value="" />
-                            <span class="form-check-label"> Make a template </span>
-                        </label>
+                            <input type="number" placeholder="%" class="form-control" />
+                        </div> -->
                     </div>
                 </div>
                 <!-- card end// -->
@@ -65,27 +65,27 @@
                         <h4>Shipping</h4>
                     </div>
                     <div class="card-body">
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-lg-6">
                                 <div class="mb-4">
-                                    <label for="product_name" class="form-label">Width</label>
-                                    <input type="text" placeholder="inch" class="form-control" id="product_name" />
+                                    <label class="form-label">Width</label>
+                                    <input type="number" placeholder="sm" class="form-control" />
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-4">
-                                    <label for="product_name" class="form-label">Height</label>
-                                    <input type="text" placeholder="inch" class="form-control" id="product_name" />
+                                    <label class="form-label">Height</label>
+                                    <input type="number" placeholder="sm" class="form-control" />
                                 </div>
                             </div>
                         </div>
                         <div class="mb-4">
-                            <label for="product_name" class="form-label">Weight</label>
-                            <input type="text" placeholder="gam" class="form-control" id="product_name" />
-                        </div>
+                            <label class="form-label">Weight</label>
+                            <input type="number" placeholder="kg" class="form-control" />
+                        </div> -->
                         <div class="mb-4">
-                            <label for="product_name" class="form-label">Shipping fees</label>
-                            <input type="text" placeholder="$" class="form-control" id="product_name" />
+                            <label class="form-label">Shipping fees</label>
+                            <input type="number" placeholder="$" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -110,28 +110,19 @@
                     </div>
                     <div class="card-body">
                         <div class="row gx-2">
-                            <div class="col-sm-6 mb-3">
+                            <div class="col-sm-12 mb-3">
                                 <label class="form-label">Category</label>
-                                <select class="form-select" name="category_id">
+                                <select class="form-select" name="category_id" required>
                                     <option value="">- - - - - - - - </option>                                    
                                     {% for i in categories %}
                                     <option value="{{i.id}}">{{i.title}}</option>                                    
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-sm-6 mb-3">
-                                <label class="form-label">Sub-category</label>
-                                <select class="form-select">
-                                    <option>Nissan</option>
-                                    <option>Honda</option>
-                                    <option>Mercedes</option>
-                                    <option>Chevrolet</option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <label for="product_name" class="form-label">Tags</label>
+                            <!-- <div class="mb-4">
+                                <label class="form-label">Tags</label>
                                 <input type="text" class="form-control" />
-                            </div>
+                            </div> -->
                         </div>
                         <!-- row.// -->
                     </div>

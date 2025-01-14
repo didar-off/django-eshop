@@ -108,7 +108,7 @@
                                                 </div>
                                                 <div class="product-card-bottom">
                                                     <div class="product-price">
-                                                        <span>${{i.price}}</span>
+                                                        <span>${{i.price}}</span> <br>
                                                         <span class="old-price">${{i.regular_price}}</span>
                                                     </div>
                                                     <div class="add-cart">
@@ -723,16 +723,16 @@
                 </div>
                 <div class="carausel-8-columns-cover position-relative">
                     <div class="carausel-8-columns" id="carausel-8-columns">
+                        {% for i in categories %}
                         <div class="card-1">
-                            {% for i in categories %}
                             <figure class="img-hover-scale overflow-hidden">
-                                <a href="shop-grid-right.html"><img src="{{i.icon.url}}" alt="" /></a>
+                                <a href="category-{{i.id}}"><img src="{{i.icon.url}}" alt="" /></a>
                             </figure>
                             <h6>
-                                <a href="shop-grid-right.html">{{i.title}}</a>
+                                <a href="category-{{i.id}}">{{i.title}}</a>
                             </h6>
-                            {% endfor %}
                         </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
