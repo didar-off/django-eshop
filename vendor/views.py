@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.utils.dateformat import DateFormat
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
@@ -26,7 +27,7 @@ def get_monthly_sales():
 
 @login_required
 def dashboard(request):
-    products = store_models.Product.objects.filter(vendor=request.user) #vendor come from product model field
+    products = store_models.Product.objects.filter(vendor=request.user).order_by('date') #vendor come from product model field
     orders = store_models.Order.objects.filter(vendors=request.user)
     revenue = store_models.OrderItem.objects.filter(vendor=request.user).aggregate(total=models.Sum('total'))['total']
     # {revenue: 100} => {'total': 100 -> grab it and return only amount of total} => 100
@@ -36,6 +37,13 @@ def dashboard(request):
     monthly_sales = get_monthly_sales()
     rating = store_models.Review.objects.filter(product__vendor=request.user).aggregate(avg=models.Avg('rating'))['avg']
 
+    labels = []
+    data = []
+
+    for product in products:
+        labels.append(product.name)
+        data.append(product.stock)
+
     context = {
         'products': products,
         'orders': orders,
@@ -44,6 +52,8 @@ def dashboard(request):
         'reviews': reviews,
         'monthly_sales': monthly_sales,
         'rating': rating,
+        'labels': labels,
+        'data': data,
     }
 
     return render(request, 'vendor/dashboard.html', context)

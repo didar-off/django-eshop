@@ -1,0 +1,159 @@
+{% extends "vendor/main.html" %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+
+
+<section class="content-main">
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-9">
+                <div class="content-header">
+                    <h2 class="content-title">Add New Product</h2>
+                    <div>
+                        <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                        <button type="submit" class="btn btn-md rounded font-sm hover-up">Publich</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Basic</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label class="form-label">Product title</label>
+                            <input name="name" type="text" placeholder="Type here" class="form-control" />
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Short information</label>
+                            <textarea name="short_inf" placeholder="Type here" class="form-control" rows="4"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Full description</label>
+                            <textarea name="description" placeholder="Type here" class="form-control" rows="4"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label">Sale price</label>
+                                    <input name="price" placeholder="$" type="number" class="form-control" min="0"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label">Regular price</label>
+                                    <div class="row gx-2">
+                                        <input name="regular_price" placeholder="$" type="number" class="form-control" min="0"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <label class="form-label">Stock</label>
+                                <input name="stock" placeholder="Amount" type="number" class="form-control" min="0"/>
+                            </div>
+                        </div>
+                        <!-- <div class="mb-4">
+                            <label class="form-label">Tax rate</label>
+                            <input type="number" placeholder="%" class="form-control" />
+                        </div> -->
+                    </div>
+                </div>
+                <!-- card end// -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Shipping</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <label class="form-label">Width</label>
+                                    <input type="number" placeholder="sm" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <label class="form-label">Height</label>
+                                    <input type="number" placeholder="sm" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Weight</label>
+                            <input type="number" placeholder="kg" class="form-control" />
+                        </div> -->
+                        <div class="mb-4">
+                            <label class="form-label">Shipping fees</label>
+                            <input type="number" placeholder="$" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <!-- card end// -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Variants</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label class="form-label">Variant Title</label>
+                            <input type="text" placeholder="Type here" class="form-control" />
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Item Title</label>
+                            <input type="text" placeholder="Type here" class="form-control" />
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Item Description</label>
+                            <input type="text" placeholder="Type here" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <!-- card end// -->
+            </div>
+            <div class="col-lg-3">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Media</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="input-upload">
+                            <img id="imagePreview" src="" alt="Image Preview will appear here" style="width: 100px;"/>
+                            <input name="image" id="imageInput" onchange="previewImage(event)" accept="image/*" class="form-control" type="file" />
+                        </div>
+                    </div>
+                </div>
+                <!-- card end// -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Organization</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row gx-2">
+                            <div class="col-sm-12 mb-3">
+                                <label class="form-label">Category</label>
+                                <select class="form-select" name="category_id" required>
+                                    <option value="">- - - - - - - - </option>                                    
+                                    {% for i in categories %}
+                                    <option value="{{i.id}}">{{i.title}}</option>                                    
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <!-- <div class="mb-4">
+                                <label class="form-label">Tags</label>
+                                <input type="text" class="form-control" />
+                            </div> -->
+                        </div>
+                        <!-- row.// -->
+                    </div>
+                </div>
+                <!-- card end// -->
+            </div>
+        </div>
+    </form>
+</section>
+
+
+{% endblock content %}
