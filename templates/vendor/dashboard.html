@@ -4,1204 +4,419 @@
 {% load humanize %}
 
 
-<main id="content" role="main" class="main">
-  <!-- Content -->
-  <div class="content container-fluid">
-    <!-- Page Header -->
-    <div class="page-header">
-      <div class="row align-items-center">
-        <div class="col-sm mb-2 mb-sm-0">
-          <h1 class="page-header-title">Good morning, {{request.user.profile.full_name}}.</h1>
-          <p class="page-header-text">Here's what's happening with your store today.</p>
-        </div>
-        <!-- End Col -->
-      </div>
-    </div>
-    <!-- End Page Header -->
-
-    <!-- Card -->
-    <div class="card card-body mb-3 mb-lg-5">
-      <div class="row col-lg-divider gx-lg-6">
-        <div class="col-lg-3">
-          <!-- Media -->
-          <div class="d-flex">
-            <div class="flex-grow-1">
-              <h6 class="card-subtitle mb-3">Products</h6>
-              <h3 class="card-title">You have {{products.count}} product{{products.count|pluralize}}</h3>
-
-              <div class="d-flex align-items-center">
-                <span class="d-block fs-6">5k orders</span>
-                <span class="badge bg-soft-success text-success ms-2">
-                  <i class="bi-graph-up"></i> 4.3%
-                </span>
-              </div>
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Dashboard</h2>
+                <p>Whole data about your business here</p>
             </div>
-
-            <span class="icon icon-soft-secondary icon-sm icon-circle ms-3">
-              <i class="bi-shop"></i>
-            </span>
-          </div>
-          <!-- End Media -->
-        </div>
-        <!-- End Col -->
-
-        <div class="col-lg-3">
-          <!-- Media -->
-          <div class="d-flex">
-            <div class="flex-grow-1">
-              <h6 class="card-subtitle mb-3">Orders</h6>
-              <h3 class="card-title">You have {{orders.count}} order{{orders.count|pluralize}}</h3>
-
-              <div class="d-flex align-items-center">
-                <span class="d-block fs-6">21k orders</span>
-                <span class="badge bg-soft-success text-success ms-2">
-                  <i class="bi-graph-up"></i> 12.5%
-                </span>
-              </div>
+            <div>
+                <a href="#" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create report</a>
             </div>
-
-            <span class="icon icon-soft-secondary icon-sm icon-circle ms-3">
-              <i class="bi-layout-text-window-reverse"></i>
-            </span>
-          </div>
-          <!-- End Media -->
         </div>
-        <!-- End Col -->
-
-        <div class="col-lg-3">
-          <!-- Media -->
-          <div class="d-flex">
-            <div class="flex-grow-1">
-              <h6 class="card-subtitle mb-3">Discount</h6>
-              <h3 class="card-title">$15,503.00</h3>
-
-              <div class="d-flex align-items-center">
-                <span class="d-block fs-6">6k orders</span>
-              </div>
-            </div>
-
-            <span class="icon icon-soft-secondary icon-sm icon-circle ms-3">
-              <i class="bi-percent"></i>
-            </span>
-          </div>
-          <!-- End Media -->
-        </div>
-        <!-- End Col -->
-
-        <div class="col-lg-3">
-          <!-- Media -->
-          <div class="d-flex">
-            <div class="flex-grow-1">
-              <h6 class="card-subtitle mb-3">Affiliate</h6>
-              <h3 class="card-title">$3,982.53</h3>
-
-              <div class="d-flex align-items-center">
-                <span class="d-block fs-6">150 orders</span>
-                <span class="badge bg-soft-danger text-danger ms-2">
-                  <i class="bi-graph-down"></i> 4.4%
-                </span>
-              </div>
-            </div>
-
-            <span class="icon icon-soft-secondary icon-sm icon-circle ms-3">
-              <i class="bi-people"></i>
-            </span>
-          </div>
-          <!-- End Media -->
-        </div>
-        <!-- End Col -->
-      </div>
-      <!-- End Row -->
-    </div>
-    <!-- End Card -->
-
-    <!-- Card -->
-    <div class="card mb-3 mb-lg-5">
-      <!-- Header -->
-      <div class="card-header card-header-content-sm-between">
-        <h4 class="card-header-title mb-2 mb-sm-0">Sales <i class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Net sales (gross sales minus discounts and returns) plus taxes and shipping. Includes orders from all sales channels."></i></h4>
-
-        <div class="d-grid d-sm-flex gap-2">
-          <!-- Select -->
-          <div class="tom-select-custom">
-            <select class="js-select form-select form-select-sm" autocomplete="off" data-hs-tom-select-options='{
-                      "searchInDropdown": false,
-                      "hideSearch": true,
-                      "dropdownWidth": "10rem"
-                    }'>
-              <option value="online-store">Online store</option>
-              <option value="in-store">In-store</option>
-            </select>
-          </div>
-          <!-- End Select -->
-
-          <!-- Daterangepicker -->
-          <button id="js-daterangepicker-predefined" class="btn btn-white btn-sm dropdown-toggle">
-            <i class="bi-calendar-week"></i>
-            <span class="js-daterangepicker-predefined-preview ms-1"></span>
-          </button>
-          <!-- End Daterangepicker -->
-        </div>
-      </div>
-      <!-- End Header -->
-
-      <!-- Body -->
-      <div class="card-body">
-        <div class="row col-lg-divider">
-          <div class="col-lg-9 mb-5 mb-lg-0">
-            <!-- Bar Chart -->
-            <div class="chartjs-custom mb-4">
-              <canvas id="ecommerce-sales" class="js-chart" style="height: 15rem;" data-hs-chartjs-options='{
-                        "type": "bar",
-                        "data": {
-                          "labels": ["1AM","2AM","3AM","4AM","5AM","6AM","7AM","8AM","9AM","10AM","11AM"],
-                          "datasets": [{
-                            "data": [200, 300, 290, 350, 150, 350, 300, 100, 125, 220, 200, 300, 290, 350, 150, 350, 300, 100, 125, 220, 225],
-                            "backgroundColor": "#377dff",
-                            "hoverBackgroundColor": "#377dff",
-                            "borderColor": "#377dff",
-                            "maxBarThickness": "10"
-                          },
-                          {
-                            "data": [150, 230, 382, 204, 169, 290, 300, 100, 300, 225, 120, 150, 230, 382, 204, 169, 290, 300, 100, 300, 140],
-                            "backgroundColor": "#e7eaf3",
-                            "borderColor": "#e7eaf3",
-                            "maxBarThickness": "10"
-                          }]
-                        },
-                        "options": {
-                          "scales": {
-                            "y": {
-                              "grid": {
-                                "color": "#e7eaf3",
-                                "drawBorder": false,
-                                "zeroLineColor": "#e7eaf3"
-                              },
-                              "ticks": {
-                                "beginAtZero": true,
-                                "stepSize": 100,
-                                "color": "#97a4af",
-                                  "font": {
-                                    "size": 12,
-                                    "family": "Open Sans, sans-serif"
-                                  },
-                                "padding": 10
-                              }
-                            },
-                            "x": {
-                              "grid": {
-                                "display": false,
-                                "drawBorder": false
-                              },
-                              "ticks": {
-                                "color": "#97a4af",
-                                  "font": {
-                                    "size": 12,
-                                    "family": "Open Sans, sans-serif"
-                                  },
-                                "padding": 5
-                              },
-                              "categoryPercentage": 0.5,
-                              "maxBarThickness": "10"
-                            }
-                          },
-                          "cornerRadius": 2,
-                          "plugins": {
-                            "tooltip": {
-                              "hasIndicator": true,
-                              "mode": "index",
-                              "intersect": false
-                            }
-                          },
-                          "hover": {
-                            "mode": "nearest",
-                            "intersect": true
-                          }
-                        }
-                      }'></canvas>
-            </div>
-            <!-- End Bar Chart -->
-
-            <div class="row justify-content-center">
-              <div class="col-auto">
-                <span class="legend-indicator"></span> Revenue
-              </div>
-              <!-- End Col -->
-
-              <div class="col-auto">
-                <span class="legend-indicator bg-primary"></span> Orders
-              </div>
-              <!-- End Col -->
-            </div>
-            <!-- End Row -->
-          </div>
-
-          <div class="col-lg-3">
-            <div class="row">
-              <div class="col-sm-6 col-lg-12">
-                <!-- Stats -->
-                <div class="d-flex justify-content-center flex-column" style="min-height: 9rem;">
-                  <h6 class="card-subtitle">Revenue</h6>
-                  <span class="d-block display-4 text-dark mb-1 me-3">$97,458.20</span>
-                  <span class="d-block text-success">
-                    <i class="bi-graph-up me-1"></i> $2,401.02 (3.7%)
-                  </span>
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card card-body mb-4">
+                    <article class="icontext">
+                        <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons md-monetization_on"></i></span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Revenue</h6>
+                            <span>${{revenue|floatformat:2|intcomma|default:"0.00"}}</span>
+                            <span class="text-sm"> Shipping fees are not included </span>
+                        </div>
+                    </article>
                 </div>
-                <!-- End Stats -->
-
-                <hr class="d-none d-lg-block my-0">
-              </div>
-              <!-- End Col -->
-
-              <div class="col-sm-6 col-lg-12">
-                <!-- Stats -->
-                <div class="d-flex justify-content-center flex-column" style="min-height: 9rem;">
-                  <h6 class="card-subtitle">Orders</h6>
-                  <span class="d-block display-4 text-dark mb-1 me-3">67,893</span>
-                  <span class="d-block text-danger">
-                    <i class="bi-graph-down me-1"></i> +3,301 (1.2%)
-                  </span>
-                </div>
-                <!-- End Stats -->
-              </div>
-              <!-- End Col -->
             </div>
-            <!-- End Row -->
-          </div>
+            <div class="col-lg-3">
+                <div class="card card-body mb-4">
+                    <article class="icontext">
+                        <span class="icon icon-sm rounded-circle bg-success-light"><i class="text-success material-icons md-local_shipping"></i></span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Orders</h6>
+                            <span>{{orders.count}}</span>
+                            <span class="text-sm"> Excluding orders in transit </span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card card-body mb-4">
+                    <article class="icontext">
+                        <span class="icon icon-sm rounded-circle bg-warning-light"><i class="text-warning material-icons md-qr_code"></i></span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Products</h6>
+                            <span>{{products.count}}</span>
+                            <span class="text-sm"> And 19 Categories </span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card card-body mb-4">
+                    <article class="icontext">
+                        <span class="icon icon-sm rounded-circle bg-info-light"><i class="text-info material-icons md-shopping_basket"></i></span>
+                        <div class="text">
+                            <h6 class="mb-1 card-title">Monthly Earning</h6>
+                            <span>$6,982</span>
+                            <span class="text-sm"> Based in your local time. </span>
+                        </div>
+                    </article>
+                </div>
+            </div>
         </div>
-        <!-- End Row -->
-      </div>
-      <!-- End Body -->
-    </div>
-    <!-- End Card -->
-
-    <div class="row">
-      <div class="col-lg-4 mb-3 mb-lg-5">
-        <div class="d-grid gap-2 gap-lg-4">
-          <!-- Card -->
-          <a class="card card-hover-shadow" href="{% url "vendor:create-product" %}">
+        <div class="row">
+            <div class="col-xl-8 col-lg-12">
+                <div class="card mb-4">
+                    <article class="card-body">
+                        <h5 class="card-title">Sale statistics</h5>
+                        <canvas id="myChart" height="120px"></canvas>
+                    </article>
+                </div>
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div class="card mb-4">
+                            <article class="card-body">
+                                <h5 class="card-title">New Members</h5>
+                                <div class="new-member-list">
+                                    <div class="d-flex align-items-center justify-content-between mb-4">
+                                        <div class="d-flex align-items-center">
+                                            <img src="{% static 'vendor/assets/imgs/people/avatar-4.png' %}" alt="" class="avatar" />
+                                            <div>
+                                                <h6>Patric Adams</h6>
+                                                <p class="text-muted font-xs">Sanfrancisco</p>
+                                            </div>
+                                        </div>
+                                        <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between mb-4">
+                                        <div class="d-flex align-items-center">
+                                            <img src="{% static 'vendor/assets/imgs/people/avatar-2.png' %}" alt="" class="avatar" />
+                                            <div>
+                                                <h6>Dilan Specter</h6>
+                                                <p class="text-muted font-xs">Sanfrancisco</p>
+                                            </div>
+                                        </div>
+                                        <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between mb-4">
+                                        <div class="d-flex align-items-center">
+                                            <img src="{% static 'vendor/assets/imgs/people/avatar-3.png' %}" alt="" class="avatar" />
+                                            <div>
+                                                <h6>Tomas Baker</h6>
+                                                <p class="text-muted font-xs">Sanfrancisco</p>
+                                            </div>
+                                        </div>
+                                        <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="card mb-4">
+                            <article class="card-body">
+                                <h5 class="card-title">Recent activities</h5>
+                                <ul class="verti-timeline list-unstyled font-sm">
+                                    <li class="event-list">
+                                        <div class="event-timeline-dot">
+                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>Today</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>Lorem ipsum dolor sit amet consectetur</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="event-list active">
+                                        <div class="event-timeline-dot">
+                                            <i class="material-icons md-play_circle_outline font-xxl animation-fade-right"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>17 May</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>Debitis nesciunt voluptatum dicta reprehenderit</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="event-list">
+                                        <div class="event-timeline-dot">
+                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>13 May</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>Accusamus voluptatibus voluptas.</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="event-list">
+                                        <div class="event-timeline-dot">
+                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>05 April</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>At vero eos et accusamus et iusto odio dignissi</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="event-list">
+                                        <div class="event-timeline-dot">
+                                            <i class="material-icons md-play_circle_outline font-xxl"></i>
+                                        </div>
+                                        <div class="media">
+                                            <div class="me-3">
+                                                <h6><span>26 Mar</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                            </div>
+                                            <div class="media-body">
+                                                <div>Responded to need “Volunteer Activities</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-12">
+                <div class="card mb-4">
+                    <article class="card-body">
+                        <h5 class="card-title">Revenue Base on Area</h5>
+                        <canvas id="myChart2" height="217"></canvas>
+                    </article>
+                </div>
+                <div class="card mb-4">
+                    <article class="card-body">
+                        <h5 class="card-title">Marketing Chanel</h5>
+                        <span class="text-muted font-xs">Facebook</span>
+                        <div class="progress mb-3">
+                            <div class="progress-bar" role="progressbar" style="width: 15%">15%</div>
+                        </div>
+                        <span class="text-muted font-xs">Instagram</span>
+                        <div class="progress mb-3">
+                            <div class="progress-bar" role="progressbar" style="width: 65%">65%</div>
+                        </div>
+                        <span class="text-muted font-xs">Google</span>
+                        <div class="progress mb-3">
+                            <div class="progress-bar" role="progressbar" style="width: 51%">51%</div>
+                        </div>
+                        <span class="text-muted font-xs">Twitter</span>
+                        <div class="progress mb-3">
+                            <div class="progress-bar" role="progressbar" style="width: 80%">80%</div>
+                        </div>
+                        <span class="text-muted font-xs">Other</span>
+                        <div class="progress mb-3">
+                            <div class="progress-bar" role="progressbar" style="width: 80%">80%</div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <h4 class="card-title">Latest orders</h4>
+                <div class="row align-items-center">
+                    <div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
+                        <div class="custom_select">
+                            <select class="form-select select-nice">
+                                <option selected>All Categories</option>
+                                <option>Women's Clothing</option>
+                                <option>Men's Clothing</option>
+                                <option>Cellphones</option>
+                                <option>Computer & Office</option>
+                                <option>Consumer Electronics</option>
+                                <option>Jewelry & Accessories</option>
+                                <option>Home & Garden</option>
+                                <option>Luggage & Bags</option>
+                                <option>Shoes</option>
+                                <option>Mother & Kids</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <input type="date" value="02.05.2021" class="form-control" />
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <div class="custom_select">
+                            <select class="form-select select-nice">
+                                <option selected>Status</option>
+                                <option>All</option>
+                                <option>Paid</option>
+                                <option>Chargeback</option>
+                                <option>Refund</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </header>
             <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="flex-shrink-0">
-                  <img class="avatar avatar-lg avatar-4x3" src="{% static 'vendor/assets/svg/illustrations/oc-megaphone.svg' %}" alt="Image Description" style="min-height: 5rem;" data-hs-theme-appearance="default">
-                  <img class="avatar avatar-lg avatar-4x3" src="{% static 'vendor/assets/svg/illustrations-light/oc-megaphone.svg' %}" alt="Image Description" style="min-height: 5rem;" data-hs-theme-appearance="dark">
+                <div class="table-responsive">
+                    <div class="table-responsive">
+                        <table class="table align-middle table-nowrap mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" class="text-center">
+                                        <div class="form-check align-middle">
+                                            <input class="form-check-input" type="checkbox" id="transactionCheck01" />
+                                            <label class="form-check-label" for="transactionCheck01"></label>
+                                        </div>
+                                    </th>
+                                    <th class="align-middle" scope="col">Order ID</th>
+                                    <th class="align-middle" scope="col">Billing Name</th>
+                                    <th class="align-middle" scope="col">Date</th>
+                                    <th class="align-middle" scope="col">Total</th>
+                                    <th class="align-middle" scope="col">Payment Status</th>
+                                    <th class="align-middle" scope="col">Payment Method</th>
+                                    <th class="align-middle" scope="col">View Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="transactionCheck02" />
+                                            <label class="form-check-label" for="transactionCheck02"></label>
+                                        </div>
+                                    </td>
+                                    <td><a href="#" class="fw-bold">#SK2540</a></td>
+                                    <td>Neal Matthews</td>
+                                    <td>07 Oct, 2021</td>
+                                    <td>$400</td>
+                                    <td>
+                                        <span class="badge badge-pill badge-soft-success">Paid</span>
+                                    </td>
+                                    <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i> Mastercard</td>
+                                    <td>
+                                        <a href="#" class="btn btn-xs"> View details</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="transactionCheck03" />
+                                            <label class="form-check-label" for="transactionCheck03"></label>
+                                        </div>
+                                    </td>
+                                    <td><a href="#" class="fw-bold">#SK2541</a></td>
+                                    <td>Jamal Burnett</td>
+                                    <td>07 Oct, 2021</td>
+                                    <td>$380</td>
+                                    <td>
+                                        <span class="badge badge-pill badge-soft-danger">Chargeback</span>
+                                    </td>
+                                    <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i> Visa</td>
+                                    <td>
+                                        <a href="#" class="btn btn-xs"> View details</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="transactionCheck04" />
+                                            <label class="form-check-label" for="transactionCheck04"></label>
+                                        </div>
+                                    </td>
+                                    <td><a href="#" class="fw-bold">#SK2542</a></td>
+                                    <td>Juan Mitchell</td>
+                                    <td>06 Oct, 2021</td>
+                                    <td>$384</td>
+                                    <td>
+                                        <span class="badge badge-pill badge-soft-success">Paid</span>
+                                    </td>
+                                    <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i> Paypal</td>
+                                    <td>
+                                        <a href="#" class="btn btn-xs"> View details</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="transactionCheck05" />
+                                            <label class="form-check-label" for="transactionCheck05"></label>
+                                        </div>
+                                    </td>
+                                    <td><a href="#" class="fw-bold">#SK2543</a></td>
+                                    <td>Barry Dick</td>
+                                    <td>05 Oct, 2021</td>
+                                    <td>$412</td>
+                                    <td>
+                                        <span class="badge badge-pill badge-soft-success">Paid</span>
+                                    </td>
+                                    <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i> Mastercard</td>
+                                    <td>
+                                        <a href="#" class="btn btn-xs"> View details</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="transactionCheck06" />
+                                            <label class="form-check-label" for="transactionCheck06"></label>
+                                        </div>
+                                    </td>
+                                    <td><a href="#" class="fw-bold">#SK2544</a></td>
+                                    <td>Ronald Taylor</td>
+                                    <td>04 Oct, 2021</td>
+                                    <td>$404</td>
+                                    <td>
+                                        <span class="badge badge-pill badge-soft-warning">Refund</span>
+                                    </td>
+                                    <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i> Visa</td>
+                                    <td>
+                                        <a href="#" class="btn btn-xs"> View details</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="transactionCheck07" />
+                                            <label class="form-check-label" for="transactionCheck07"></label>
+                                        </div>
+                                    </td>
+                                    <td><a href="#" class="fw-bold">#SK2545</a></td>
+                                    <td>Jacob Hunter</td>
+                                    <td>04 Oct, 2021</td>
+                                    <td>$392</td>
+                                    <td>
+                                        <span class="badge badge-pill badge-soft-success">Paid</span>
+                                    </td>
+                                    <td><i class="material-icons md-payment font-xxl text-muted mr-5"></i> Paypal</td>
+                                    <td>
+                                        <a href="#" class="btn btn-xs"> View details</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
-                <div class="flex-grow-1 ms-4">
-                  <h3 class="text-inherit mb-1">Product</h3>
-                  <span class="text-body">Create a new product</span>
-                </div>
-
-                <div class="ms-2 text-end">
-                  <i class="bi-chevron-right text-body text-inherit"></i>
-                </div>
-              </div>
+                <!-- table-responsive end// -->
             </div>
-          </a>
-          <!-- End Card -->
-
-          <!-- Card -->
-          <a class="card card-hover-shadow" href="#">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="flex-shrink-0">
-                  <img class="avatar avatar-lg avatar-4x3" src="{% static 'vendor/assets/svg/illustrations/oc-collection.svg' %}" alt="Image Description" style="min-height: 5rem;" data-hs-theme-appearance="default">
-                  <img class="avatar avatar-lg avatar-4x3" src="{% static 'vendor/assets/svg/illustrations-light/oc-collection.svg' %}" alt="Image Description" style="min-height: 5rem;" data-hs-theme-appearance="dark">
-                </div>
-
-                <div class="flex-grow-1 ms-4">
-                  <h3 class="text-inherit mb-1">Collection</h3>
-                  <span class="text-body">Create a new collection</span>
-                </div>
-
-                <div class="ms-2 text-end">
-                  <i class="bi-chevron-right text-body text-inherit"></i>
-                </div>
-              </div>
-            </div>
-          </a>
-          <!-- End Card -->
-
-          <!-- Card -->
-          <a class="card card-hover-shadow" href="{% url "vendor:coupons" %}">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="flex-shrink-0">
-                  <img class="avatar avatar-lg avatar-4x3" src="{% static 'vendor/assets/svg/illustrations/oc-discount.svg' %}" alt="Image Description" style="min-height: 5rem;" data-hs-theme-appearance="default">
-                  <img class="avatar avatar-lg avatar-4x3" src="{% static 'vendor/assets/svg/illustrations-light/oc-discount.svg' %}" alt="Image Description" style="min-height: 5rem;" data-hs-theme-appearance="dark">
-                </div>
-
-                <div class="flex-grow-1 ms-4">
-                  <h3 class="text-inherit mb-1">Coupon</h3>
-                  <span class="text-body">Create a new discount</span>
-                </div>
-
-                <div class="ms-2 text-end">
-                  <i class="bi-chevron-right text-body text-inherit"></i>
-                </div>
-              </div>
-            </div>
-          </a>
-          <!-- End Card -->
         </div>
-      </div>
-      <!-- End Col -->
-
-      <div class="col-lg-8 mb-3 mb-lg-5">
-        <!-- Card -->
-        <div class="card h-100">
-          <!-- Header -->
-          <div class="card-header card-header-content-between">
-            <h4 class="card-header-title">All products</h4>
-
-            <a class="btn btn-ghost-secondary btn-sm" href="{% url "vendor:products" %}">View all</a>
-          </div>
-          <!-- End Header -->
-
-          <!-- Body -->
-          <div class="card-body-height">
-            <!-- Table -->
-            <div class="table-responsive">
-              <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
-                <thead class="thead-light">
-                  <tr>
-                    <th scope="col">Product</th>
-                    <th scope="col">Change</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Sold</th>
-                    <th scope="col">Sales</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {% for product in products %}
-                  <tr>
-                    <td>
-                      <!-- Media -->
-                      <a class="d-flex align-items-center" href="ecommerce-product-details.html">
-                        <div class="flex-shrink-0">
-                          <img class="avatar" src="{{product.image.url}}" alt="Image Description">
-                        </div>
-
-                        <div class="flex-grow-1 ms-3">
-                          <h5 class="text-inherit mb-0">{{product.name}}</h5>
-                        </div>
-                      </a>
-                      <!-- End Media -->
-                    </td>
-                    <td><i class="bi-graph-down text-danger me-1"></i> 72%</td>
-                    <td>$65</td>
-                    <td>7,545</td>
-                    <td>
-                      <h4 class="mb-0">$15,302.00</h4>
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            <!-- End Table -->
-          </div>
-          <!-- End Body -->
+        <div class="pagination-area mt-30 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                    <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                    <li class="page-item"><a class="page-link" href="#">02</a></li>
+                    <li class="page-item"><a class="page-link" href="#">03</a></li>
+                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">16</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                    </li>
+                </ul>
+            </nav>
         </div>
-        <!-- End Card -->
-      </div>
-      <!-- End Col -->
-    </div>
-    <!-- End Row -->
-
-    <!-- Card -->
-    <div id="cardFullScreenEg" class="card overflow-hidden mb-3 mb-lg-5">
-      <!-- Header -->
-      <div class="card-header card-header-content-between">
-        <h4 class="card-header-title">Your top countries <i class="bi-patch-check-fill text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="This report is based on 100% of sessions."></i></h4>
-
-        <a class="btn btn-ghost-secondary btn-sm" href="#">View all</a>
-      </div>
-      <!-- End Header -->
-
-      <!-- Body -->
-      <div class="card-body">
-        <div class="row col-sm-divider">
-          <div class="col-sm-3">
-            <!-- Stats -->
-            <div class="d-lg-flex align-items-lg-center">
-              <div class="flex-shrink-0">
-                <i class="bi-person fs-1"></i>
-              </div>
-
-              <div class="flex-grow-1 ms-lg-3">
-                <span class="d-block fs-6">Users</span>
-                <div class="d-flex align-items-center">
-                  <h3 class="mb-0">34,413</h3>
-                  <span class="badge bg-soft-success text-success ms-2">
-                    <i class="bi-graph-up"></i> 12.5%
-                  </span>
-                </div>
-              </div>
-            </div>
-            <!-- End Stats -->
-          </div>
-
-          <div class="col-sm-3">
-            <!-- Stats -->
-            <div class="d-lg-flex align-items-lg-center">
-              <div class="flex-shrink-0">
-                <i class="bi-clock-history fs-1"></i>
-              </div>
-
-              <div class="flex-grow-1 ms-lg-3">
-                <span class="d-block fs-6">Avg. session duration</span>
-                <div class="d-flex align-items-center">
-                  <h3 class="mb-0">1m 3s</h3>
-                </div>
-              </div>
-            </div>
-            <!-- End Stats -->
-          </div>
-
-          <div class="col-sm-3">
-            <!-- Stats -->
-            <div class="d-lg-flex align-items-lg-center">
-              <div class="flex-shrink-0">
-                <i class="bi-files-alt fs-1"></i>
-              </div>
-
-              <div class="flex-grow-1 ms-lg-3">
-                <span class="d-block fs-6">Pages/Sessions</span>
-                <div class="d-flex align-items-center">
-                  <h3 class="mb-0">1.78</h3>
-                </div>
-              </div>
-            </div>
-            <!-- End Stats -->
-          </div>
-
-          <div class="col-sm-3">
-            <!-- Stats -->
-            <div class="d-lg-flex align-items-lg-center">
-              <div class="flex-shrink-0">
-                <i class="bi-pie-chart fs-1"></i>
-              </div>
-
-              <div class="flex-grow-1 ms-lg-3">
-                <span class="d-block fs-6">Bounce rate</span>
-                <div class="d-flex align-items-center">
-                  <h3 class="mb-0">62.9%</h3>
-                </div>
-              </div>
-            </div>
-            <!-- End Stats -->
-          </div>
-        </div>
-        <!-- End Row -->
-      </div>
-      <!-- End Body -->
-
-      <hr class="my-0">
-
-      <!-- Body -->
-      <div class="card-body">
-        <div class="row no-gutters">
-          <div class="col-lg-7">
-            <!-- JSVector Map -->
-            <div style="height: 20.5rem;">
-              <div class="js-jsvectormap jsvectormap-custom" data-hs-js-vector-map-options='{
-                    "regionStyle": {
-                      "initial": {
-                        "fill": "#bdc5d1"
-                      },
-                      "hover": {
-                        "fill": "#77838f"
-                      }
-                    },
-                    "markerStyle": {
-                      "initial": {
-                        "stroke-width": 2,
-                        "fill": "#377dff",
-                        "stroke": "#fff",
-                        "stroke-opacity": 1,
-                        "r": 6
-                      },
-                      "hover": {
-                        "fill": "#377dff",
-                        "stroke": "#377dff"
-                      }
-                    }
-                  }'>
-              </div>
-            </div>
-            <!-- End JSVector Map -->
-          </div>
-          <!-- End Col -->
-
-          <div class="col-lg-5">
-            <!-- Table -->
-            <div class="table-responsive">
-              <table class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
-                <thead>
-                  <tr>
-                    <th class="border-top-0">Country</th>
-                    <th class="border-top-0">Visits</th>
-                    <th class="border-top-0">Purchases</th>
-                    <th class="border-top-0">Change</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                          <img class="avatar-xss avatar-circle" src="{% static 'vendor/assets/vendor/flag-icon-css/flags/1x1/us.svg' %}" alt="Image description" />
-                        </div>
-                        <div class="flex-grow-1 ms-2">USA</div>
-                      </div>
-                    </td>
-                    <td>10,013</td>
-                    <td>$5,361</td>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        73.2% <i class="bi-graph-up text-success ms-1"></i>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                          <img class="avatar-xss avatar-circle" src="{% static 'vendor/assets/vendor/flag-icon-css/flags/1x1/in.svg' %}" alt="Image description" />
-                        </div>
-                        <div class="flex-grow-1 ms-2">India</div>
-                      </div>
-                    </td>
-                    <td>8,545</td>
-                    <td>$4,923</td>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        45.8% <i class="bi-graph-down text-danger ms-1"></i>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                          <img class="avatar-xss avatar-circle" src="{% static 'vendor/assets/vendor/flag-icon-css/flags/1x1/ca.svg' %}" alt="Image description" />
-                        </div>
-                        <div class="flex-grow-1 ms-2">Canada</div>
-                      </div>
-                    </td>
-                    <td>6,837</td>
-                    <td>$3,954</td>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        24.4% <i class="bi-graph-up text-success ms-1"></i>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                          <img class="avatar-xss avatar-circle" src="{% static 'vendor/assets/vendor/flag-icon-css/flags/1x1/de.svg' %}" alt="Image description" />
-                        </div>
-                        <div class="flex-grow-1 ms-2">Germany</div>
-                      </div>
-                    </td>
-                    <td>4,512</td>
-                    <td>$2,512</td>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        12.8% <i class="bi-graph-up text-success ms-1"></i>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                          <img class="avatar-xss avatar-circle" src="{% static 'vendor/assets/vendor/flag-icon-css/flags/1x1/gb.svg' %}" alt="Image description" />
-                        </div>
-                        <div class="flex-grow-1 ms-2">UK</div>
-                      </div>
-                    </td>
-                    <td>3,795</td>
-                    <td>$1,173</td>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        67.9% <i class="bi-graph-down text-danger ms-1"></i>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <!-- End Table -->
-          </div>
-          <!-- End Col -->
-        </div>
-        <!-- End Row -->
-      </div>
-      <!-- End Body -->
-    </div>
-    <!-- End Card -->
-
-    <!-- Card -->
-    <div class="card">
-      <div class="row col-lg-divider">
-        <div class="col-lg-6">
-          <!-- Body -->
-          <div class="card-body">
-            <h4>Total sales <i class="bi-question-circle text-body ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Net sales (gross sales minus discounts and returns) plus taxes and shipping. Includes orders from all sales channels."></i></h4>
-
-            <div class="row align-items-sm-center mt-4 mt-sm-0 mb-5">
-              <div class="col-sm mb-3 mb-sm-0">
-                <span class="display-5 text-dark me-2">$597,820.75</span>
-              </div>
-              <!-- End Col -->
-
-              <div class="col-sm-auto">
-                <span class="h3 text-success">
-                  <i class="bi-graph-up"></i> 25.9%
-                </span>
-                <span class="d-block">&mdash; 1,347,935 orders <span class="badge bg-soft-dark text-dark rounded-pill ms-1">+$97k today</span></span>
-              </div>
-              <!-- End Col -->
-            </div>
-            <!-- End Row -->
-
-            <!-- Bar Chart -->
-            <div class="chartjs-custom mb-4" style="height: 18rem;">
-              <canvas id="ecommerce-overview-1" class="js-chart" data-hs-chartjs-options='{
-                        "type": "line",
-                        "data": {
-                           "labels": ["1AM","2AM","3AM","4AM","5AM","6AM","7AM","8AM","9AM","10AM"],
-                           "datasets": [{
-                            "data": [200, 200, 240, 350, 200, 350, 200, 250, 285, 220],
-                            "backgroundColor": "transparent",
-                            "borderColor": "#377dff",
-                            "borderWidth": 2,
-                            "pointRadius": 0,
-                            "hoverBorderColor": "#377dff",
-                            "pointBackgroundColor": "#377dff",
-                            "pointBorderColor": "#fff",
-                            "pointHoverRadius": 0,
-                            "tension": 0.4
-                          },
-                          {
-                            "data": [150, 230, 382, 204, 269, 290, 200, 250, 200, 225],
-                            "backgroundColor": "transparent",
-                            "borderColor": "#e7eaf3",
-                            "borderWidth": 2,
-                            "pointRadius": 0,
-                            "hoverBorderColor": "#e7eaf3",
-                            "pointBackgroundColor": "#e7eaf3",
-                            "pointBorderColor": "#fff",
-                            "pointHoverRadius": 0,
-                            "tension": 0.4
-                          }]
-                        },
-                        "options": {
-                           "scales": {
-                              "y": {
-                                "grid": {
-                                  "color": "#e7eaf3",
-                                  "drawBorder": false,
-                                  "zeroLineColor": "#e7eaf3"
-                                },
-                                "ticks": {
-                                  "beginAtZero": true,
-                                  "stepSize": 100,
-                                  "color": "#97a4af",
-                                  "font": {
-                                    "size": 12,
-                                    "family": "Open Sans, sans-serif"
-                                  },
-                                  "padding": 10,
-                                  "prefix": "$",
-                                  "postfix": "k"
-                                }
-                              },
-                              "x": {
-                                "grid": {
-                                  "display": false,
-                                  "drawBorder": false
-                                },
-                                "ticks": {
-                                  "color": "#97a4af",
-                                  "font": {
-                                    "size": 12,
-                                    "family": "Open Sans, sans-serif"
-                                  },
-                                  "padding": 5
-                                }
-                              }
-                          },
-                          "plugins": {
-                            "tooltip": {
-                              "prefix": "$",
-                              "postfix": "k",
-                              "hasIndicator": true,
-                              "mode": "index",
-                              "intersect": false,
-                              "lineMode": true,
-                              "lineWithLineColor": "rgba(19, 33, 68, 0.075)"
-                            }
-                          },
-                          "hover": {
-                            "mode": "nearest",
-                            "intersect": true
-                          }
-                        }
-                      }'>
-              </canvas>
-            </div>
-            <!-- End Bar Chart -->
-
-            <!-- Legend Indicators -->
-            <div class="row justify-content-center">
-              <div class="col-auto">
-                <span class="legend-indicator"></span> Yesterday
-              </div>
-              <!-- End Col -->
-
-              <div class="col-auto">
-                <span class="legend-indicator bg-primary"></span> Today
-              </div>
-              <!-- End Col -->
-            </div>
-            <!-- End Legend Indicators -->
-          </div>
-          <!-- End Body -->
-        </div>
-        <!-- End Col -->
-
-        <div class="col-lg-6">
-          <!-- Body -->
-          <div class="card-body">
-            <h4>Visitors</h4>
-
-            <div class="row align-items-sm-center mt-4 mt-sm-0 mb-5">
-              <div class="col-sm mb-3 mb-sm-0">
-                <span class="display-5 text-dark me-2">831,071</span>
-              </div>
-              <!-- End Col -->
-
-              <div class="col-sm-auto">
-                <span class="h3 text-danger">
-                  <i class="bi-graph-down"></i> 16%
-                </span>
-                <span class="d-block">&mdash; 467,001 unique <span class="badge bg-soft-dark text-dark rounded-pill ms-1">+7k today</span></span>
-              </div>
-              <!-- End Col -->
-            </div>
-            <!-- End Row -->
-
-            <!-- Bar Chart -->
-            <div class="chartjs-custom mb-4" style="height: 18rem;">
-              <canvas id="ecommerce-overview-2" class="js-chart" data-hs-chartjs-options='{
-                        "type": "line",
-                        "data": {
-                           "labels": ["1AM","2AM","3AM","4AM","5AM","6AM","7AM","8AM","9AM","10AM"],
-                           "datasets": [{
-                            "data": [20, 20, 24, 15, 30, 35, 20, 28, 18, 16],
-                            "backgroundColor": "transparent",
-                            "borderColor": "#377dff",
-                            "borderWidth": 2,
-                            "pointRadius": 0,
-                            "hoverBorderColor": "#377dff",
-                            "pointBackgroundColor": "#377dff",
-                            "pointBorderColor": "#fff",
-                            "pointHoverRadius": 0,
-                            "tension": 0.4
-                          },
-                          {
-                            "data": [15, 23, 18, 20, 36, 29, 20, 22, 20, 22],
-                            "backgroundColor": "transparent",
-                            "borderColor": "#e7eaf3",
-                            "borderWidth": 2,
-                            "pointRadius": 0,
-                            "hoverBorderColor": "#e7eaf3",
-                            "pointBackgroundColor": "#e7eaf3",
-                            "pointBorderColor": "#fff",
-                            "pointHoverRadius": 0,
-                            "tension": 0.4
-                          }]
-                        },
-                        "options": {
-                           "scales": {
-                              "y": {
-                                "grid": {
-                                  "color": "#e7eaf3",
-                                  "drawBorder": false,
-                                  "zeroLineColor": "#e7eaf3"
-                                },
-                                "ticks": {
-                                  "beginAtZero": true,
-                                  "stepSize": 10,
-                                  "color": "#97a4af",
-                                  "font": {
-                                    "size": 12,
-                                    "family": "Open Sans, sans-serif"
-                                  },
-                                  "padding": 10,
-                                  "postfix": "k"
-                                }
-                              },
-                              "x": {
-                                "grid": {
-                                  "display": false,
-                                  "drawBorder": false
-                                },
-                                "ticks": {
-                                  "color": "#97a4af",
-                                  "font": {
-                                    "size": 12,
-                                    "family": "Open Sans, sans-serif"
-                                  },
-                                  "padding": 5
-                                }
-                              }
-                          },
-                          "plugins": {
-                            "tooltip": {
-                              "postfix": "k",
-                              "hasIndicator": true,
-                              "mode": "index",
-                              "intersect": false,
-                              "lineMode": true,
-                              "lineWithLineColor": "rgba(19, 33, 68, 0.075)"
-                            }
-                          },
-                          "hover": {
-                            "mode": "nearest",
-                            "intersect": true
-                          }
-                        }
-                      }'>
-              </canvas>
-            </div>
-            <!-- End Bar Chart -->
-
-            <!-- Legend Indicators -->
-            <div class="row justify-content-center">
-              <div class="col-auto">
-                <span class="legend-indicator"></span> Yesterday
-              </div>
-              <!-- End Col -->
-
-              <div class="col-auto">
-                <span class="legend-indicator bg-primary"></span> Today
-              </div>
-              <!-- End Col -->
-            </div>
-            <!-- End Legend Indicators -->
-          </div>
-          <!-- End Body -->
-        </div>
-        <!-- End Col -->
-      </div>
-      <!-- End Row -->
-
-      <hr>
-
-      <div class="row col-lg-divider">
-        <div class="col-lg-6">
-          <!-- Body -->
-          <div class="card-body">
-            <h4>Total orders</h4>
-
-            <div class="row align-items-sm-center mt-4 mt-sm-0 mb-5">
-              <div class="col-sm mb-3 mb-sm-0">
-                <span class="display-5 text-dark me-2">1,348,935</span>
-              </div>
-              <!-- End Col -->
-
-              <div class="col-sm-auto">
-                <span class="h3 text-success">
-                  <i class="bi-graph-up"></i> 4.7%
-                </span>
-                <span class="d-block">&mdash; orders over time <span class="badge bg-soft-dark text-dark rounded-pill ms-1">+5k today</span></span>
-              </div>
-              <!-- End Col -->
-            </div>
-            <!-- End Row -->
-
-            <!-- Bar Chart -->
-            <div class="chartjs-custom mb-4" style="height: 18rem;">
-              <canvas id="ecommerce-overview-3" class="js-chart" data-hs-chartjs-options='{
-                        "type": "line",
-                        "data": {
-                           "labels": ["1AM","2AM","3AM","4AM","5AM","6AM","7AM","8AM","9AM","10AM"],
-                           "datasets": [{
-                            "data": [15, 26, 29, 20, 23, 38, 20, 30, 20, 22],
-                            "backgroundColor": "transparent",
-                            "borderColor": "#377dff",
-                            "borderWidth": 2,
-                            "pointRadius": 0,
-                            "hoverBorderColor": "#377dff",
-                            "pointBackgroundColor": "#377dff",
-                            "pointBorderColor": "#fff",
-                            "pointHoverRadius": 0,
-                            "tension": 0.4
-                          },
-                          {
-                            "data": [20, 20, 15, 18, 20, 24, 35, 20, 35, 22],
-                            "backgroundColor": "transparent",
-                            "borderColor": "#e7eaf3",
-                            "borderWidth": 2,
-                            "pointRadius": 0,
-                            "hoverBorderColor": "#e7eaf3",
-                            "pointBackgroundColor": "#e7eaf3",
-                            "pointBorderColor": "#fff",
-                            "pointHoverRadius": 0,
-                            "tension": 0.4
-                          }]
-                        },
-                        "options": {
-                           "scales": {
-                              "y": {
-                                "grid": {
-                                  "color": "#e7eaf3",
-                                  "drawBorder": false,
-                                  "zeroLineColor": "#e7eaf3"
-                                },
-                                "ticks": {
-                                  "beginAtZero": true,
-                                  "stepSize": 10,
-                                  "color": "#97a4af",
-                                  "font": {
-                                    "size": 12,
-                                    "family": "Open Sans, sans-serif"
-                                  },
-                                  "padding": 10,
-                                  "postfix": "k"
-                                }
-                              },
-                              "x": {
-                                "grid": {
-                                  "display": false,
-                                  "drawBorder": false
-                                },
-                                "ticks": {
-                                  "color": "#97a4af",
-                                  "font": {
-                                    "size": 12,
-                                    "family": "Open Sans, sans-serif"
-                                  },
-                                  "padding": 5
-                                }
-                              }
-                          },
-                          "plugins": {
-                             "tooltip": {
-                              "postfix": "k",
-                              "hasIndicator": true,
-                              "mode": "index",
-                              "intersect": false,
-                              "lineMode": true,
-                              "lineWithLineColor": "rgba(19, 33, 68, 0.075)"
-                            }
-                          },
-                          "hover": {
-                            "mode": "nearest",
-                            "intersect": true
-                          }
-                        }
-                      }'>
-              </canvas>
-            </div>
-            <!-- End Bar Chart -->
-
-            <!-- Legend Indicators -->
-            <div class="row justify-content-center">
-              <div class="col-auto">
-                <span class="legend-indicator"></span> Yesterday
-              </div>
-              <!-- End Col -->
-
-              <div class="col-auto">
-                <span class="legend-indicator bg-primary"></span> Today
-              </div>
-              <!-- End Col -->
-            </div>
-            <!-- End Legend Indicators -->
-          </div>
-          <!-- End Body -->
-        </div>
-        <!-- End Col -->
-
-        <div class="col-lg-6">
-          <!-- Body -->
-          <div class="card-body">
-            <h4>Refunded</h4>
-
-            <div class="row align-items-sm-center mt-4 mt-sm-0 mb-5">
-              <div class="col-sm mb-3 mb-sm-0">
-                <span class="display-5 text-dark me-2">52,441</span>
-              </div>
-              <!-- End Col -->
-
-              <div class="col-sm-auto">
-                <span class="h3 text-success">
-                  <i class="bi-graph-up"></i> 11%
-                </span>
-                <span class="d-block">&mdash; refunds over time <span class="badge bg-soft-dark text-dark rounded-pill ms-1">+21 today</span></span>
-              </div>
-              <!-- End Col -->
-            </div>
-            <!-- End Row -->
-
-            <!-- Bar Chart -->
-            <div class="chartjs-custom mb-4" style="height: 18rem;">
-              <canvas id="ecommerce-overview-4" class="js-chart" data-hs-chartjs-options='{
-                        "type": "line",
-                        "data": {
-                           "labels": ["1AM","2AM","3AM","4AM","5AM","6AM","7AM","8AM","9AM","10AM"],
-                           "datasets": [{
-                            "data": [10, 20, 22, 15, 20, 15, 20, 19, 14, 15],
-                            "backgroundColor": "transparent",
-                            "borderColor": "#377dff",
-                            "borderWidth": 2,
-                            "pointRadius": 0,
-                            "hoverBorderColor": "#377dff",
-                            "pointBackgroundColor": "#377dff",
-                            "pointBorderColor": "#fff",
-                            "pointHoverRadius": 0,
-                            "tension": 0.4
-                          },
-                          {
-                            "data": [15, 13, 18, 10, 16, 19, 15, 14, 10, 26],
-                            "backgroundColor": "transparent",
-                            "borderColor": "#e7eaf3",
-                            "borderWidth": 2,
-                            "pointRadius": 0,
-                            "hoverBorderColor": "#e7eaf3",
-                            "pointBackgroundColor": "#e7eaf3",
-                            "pointBorderColor": "#fff",
-                            "pointHoverRadius": 0,
-                            "tension": 0.4
-                          }]
-                        },
-                        "options": {
-                           "scales": {
-                              "y": {
-                                "grid": {
-                                  "color": "#e7eaf3",
-                                  "drawBorder": false,
-                                  "zeroLineColor": "#e7eaf3"
-                                },
-                                "ticks": {
-                                  "beginAtZero": true,
-                                  "stepSize": 10,
-                                  "color": "#97a4af",
-                                  "font": {
-                                    "size": 12,
-                                    "family": "Open Sans, sans-serif"
-                                  },
-                                  "padding": 10
-                                }
-                              },
-                              "x": {
-                                "grid": {
-                                  "display": false,
-                                  "drawBorder": false
-                                },
-                                "ticks": {
-                                  "color": "#97a4af",
-                                  "font": {
-                                    "size": 12,
-                                    "family": "Open Sans, sans-serif"
-                                  },
-                                  "padding": 5
-                                }
-                              }
-                          },
-                          "plugins": {
-                            "tooltip": {
-                              "hasIndicator": true,
-                              "mode": "index",
-                              "intersect": false,
-                              "lineMode": true,
-                              "lineWithLineColor": "rgba(19, 33, 68, 0.075)"
-                            }
-                          },
-                          "hover": {
-                            "mode": "nearest",
-                            "intersect": true
-                          }
-                        }
-                      }'>
-              </canvas>
-            </div>
-            <!-- End Bar Chart -->
-
-            <!-- Legend Indicators -->
-            <div class="row justify-content-center">
-              <div class="col-auto">
-                <span class="legend-indicator"></span> Yesterday
-              </div>
-              <!-- End Col -->
-
-              <div class="col-auto">
-                <span class="legend-indicator bg-primary"></span> Today
-              </div>
-              <!-- End Col -->
-            </div>
-            <!-- End Legend Indicators -->
-          </div>
-          <!-- End Body -->
-        </div>
-        <!-- End Col -->
-      </div>
-      <!-- End Row -->
-    </div>
-    <!-- End Card -->
-  </div>
-  <!-- End Content -->
-
-  <!-- Footer -->
-  <div class="footer">
-    <div class="row justify-content-between align-items-center">
-      <div class="col">
-        <p class="fs-6 mb-0">&copy; Front. <span class="d-none d-sm-inline-block">2022 Htmlstream.</span></p>
-      </div>
-      <!-- End Col -->
-
-      <div class="col-auto">
-        <div class="d-flex justify-content-end">
-          <!-- List Separator -->
-          <ul class="list-inline list-separator">
-            <li class="list-inline-item">
-              <a class="list-separator-link" href="#">FAQ</a>
-            </li>
-
-            <li class="list-inline-item">
-              <a class="list-separator-link" href="#">License</a>
-            </li>
-
-            <li class="list-inline-item">
-              <!-- Keyboard Shortcuts Toggle -->
-              <button class="btn btn-ghost-secondary btn btn-icon btn-ghost-secondary rounded-circle" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasKeyboardShortcuts" aria-controls="offcanvasKeyboardShortcuts">
-                <i class="bi-command"></i>
-              </button>
-              <!-- End Keyboard Shortcuts Toggle -->
-            </li>
-          </ul>
-          <!-- End List Separator -->
-        </div>
-      </div>
-      <!-- End Col -->
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- End Footer -->
-</main>
+    </section>
 
 
 {% endblock content %}
