@@ -124,9 +124,9 @@
                         <div class="header-info">
                             <ul>
                                 <li><a href="page-about.htlm">About Us</a></li>
-                                <li><a href="page-account.html">My Account</a></li>
-                                <li><a href="shop-wishlist.html">Wishlist</a></li>
-                                <li><a href="shop-order.html">Order Tracking</a></li>
+                                <li><a href="{% url "customer:dashboard" %}">My Account</a></li>
+                                <li><a href="{% url "customer:wishlist" %}">Wishlist</a></li>
+                                <li><a href="{% url "customer:dashboard" %}">Order Tracking</a></li>
                             </ul>
                         </div>
                     </div>
@@ -190,16 +190,9 @@
                             <form action="#">
                                 <select class="select-active">
                                     <option>All Categories</option>
-                                    <option>Milks and Dairies</option>
-                                    <option>Wines & Alcohol</option>
-                                    <option>Clothing & Beauty</option>
-                                    <option>Pet Foods & Toy</option>
-                                    <option>Fast food</option>
-                                    <option>Baking material</option>
-                                    <option>Vegetables</option>
-                                    <option>Fresh Seafood</option>
-                                    <option>Noodles & Rice</option>
-                                    <option>Ice cream</option>
+                                    {% for i in categories %}
+                                    <option>{{i.title}}</option>
+                                    {% endfor %}
                                 </select>
                                 <input type="text" placeholder="Search for items..." />
                             </form>
@@ -332,21 +325,11 @@
                             <div class="categories-dropdown-wrap categories-dropdown-active-large font-heading">
                                 <div class="d-flex categori-dropdown-inner">
                                     <ul>
+                                        {% for i in categories %}
                                         <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-1.svg' %}" alt="" />Milks and Dairies</a>
+                                            <a href="{% url "store:category" i.slug %}"> <img src="{{i.icon.url}}" alt="" />{{i.title}}</a>
                                         </li>
-                                        <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-2.svg' %}" alt="" />Clothing & beauty</a>
-                                        </li>
-                                        <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-3.svg' %}" alt="" />Pet Foods & Toy</a>
-                                        </li>
-                                        <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-4.svg' %}" alt="" />Baking material</a>
-                                        </li>
-                                        <li>
-                                            <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-5.svg' %}" alt="" />Fresh Fruit</a>
-                                        </li>
+                                        {% endfor %}
                                     </ul>
                                     <ul class="end">
                                         <li>
@@ -397,7 +380,7 @@
                                         <a href="{% url "store:index" %}">Home</a>
                                     </li>
                                     <li>
-                                        <a href="page-about.html">About</a>
+                                        <a href="">Categories</a>
                                     </li>
                                     <li>
                                         <a href="shop-grid-right.html">Shop <i class="fi-rs-angle-down"></i></a>
@@ -541,7 +524,7 @@
                                         </ul>
                                     </li>
                                     <li>
-                                        <a href="page-contact.html">Contact</a>
+                                        <a href="page-contact.html">About</a>
                                     </li>
                                 </ul>
                             </nav>

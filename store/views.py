@@ -32,14 +32,27 @@ razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZOR
 
 def index(request):
     products = store_models.Product.objects.filter(status='Published', featured=True)
-    categories = store_models.Category.objects.all()
+    categories = store_models.Category.objects.all()[:4]
 
     context = {
         'products': products,
+        'new_products': store_models.Product.objects.filter(status='Published', featured=True).order_by('-date')[:4],
         'categories': categories,
     }
 
     return render(request, 'store/index.html', context)
+
+
+def category(request, slug):
+    category = store_models.Category.objects.get(slug=slug)
+    products = store_models.Product.objects.filter(category=category, status='Published')
+
+    context = {
+        'category': category,
+        'products': products,
+    }
+
+    return render(request, 'store/category.html', context)
 
 
 def product_detail(request, slug):

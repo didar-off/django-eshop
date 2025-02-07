@@ -130,7 +130,7 @@ class Product(models.Model):
         return avg if avg is not None else 0
     
     def reviews(self):
-        return Review.objects.filter(product=self)
+        return Review.objects.filter(product=self, active=True)
     
     def gallery(self):
         return Gallery.objects.filter(product=self)

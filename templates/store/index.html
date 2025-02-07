@@ -43,29 +43,6 @@
                     <section class="product-tabs section-padding position-relative">
                         <div class="section-title style-2">
                             <h3>Popular Products</h3>
-                            <ul class="nav nav-tabs links" id="myTab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="nav-tab-one" data-bs-toggle="tab" data-bs-target="#tab-one" type="button" role="tab" aria-controls="tab-one" aria-selected="true">All</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="nav-tab-two" data-bs-toggle="tab" data-bs-target="#tab-two" type="button" role="tab" aria-controls="tab-two" aria-selected="false">Milks & Dairies</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="nav-tab-three" data-bs-toggle="tab" data-bs-target="#tab-three" type="button" role="tab" aria-controls="tab-three" aria-selected="false">Coffes & Teas</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="nav-tab-four" data-bs-toggle="tab" data-bs-target="#tab-four" type="button" role="tab" aria-controls="tab-four" aria-selected="false">Pet Foods</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="nav-tab-five" data-bs-toggle="tab" data-bs-target="#tab-five" type="button" role="tab" aria-controls="tab-five" aria-selected="false">Meats</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="nav-tab-six" data-bs-toggle="tab" data-bs-target="#tab-six" type="button" role="tab" aria-controls="tab-six" aria-selected="false">Vegetables</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="nav-tab-seven" data-bs-toggle="tab" data-bs-target="#tab-seven" type="button" role="tab" aria-controls="tab-seven" aria-selected="false">Fruits</button>
-                                </li>
-                            </ul>
                         </div>
                         <!--End nav-tabs-->
                         <div class="tab-content" id="myTabContent">
@@ -634,7 +611,7 @@
                         <ul>
                             {% for i in categories %}
                             <li>
-                                <a href="shop-grid-right.html"> <img src="{{i.icon.url}}" alt="" />{{i.title}}</a><span class="count">{{i.products.count}}</span>
+                                <a href="{% url "store:category" i.slug %}"> <img src="{{i.icon.url}}" alt="" />{{i.title}}</a><span class="count">{{i.products.count}}</span>
                             </li>
                             {% endfor %}
                         </ul>
@@ -682,18 +659,20 @@
                     <!-- Product sidebar Widget -->
                     <div class="sidebar-widget product-sidebar mb-30 p-30 bg-grey border-radius-10">
                         <h5 class="section-title style-1 mb-30">New products</h5>
+                        {% for i in new_products %}
                         <div class="single-post clearfix">
                             <div class="image">
-                                <img src="{% static 'assets/imgs/shop/thumbnail-3.jpg' %}" alt="#" />
+                                <img src="{{i.image.url}}" alt="#" />
                             </div>
                             <div class="content pt-10">
-                                <h5><a href="shop-product-detail.html">Chen Cardigan</a></h5>
-                                <p class="price mb-0 mt-5">$99.50</p>
+                                <h5><a href="shop-product-detail.html">{{i.name}}</a></h5>
+                                <p class="price mb-0 mt-5">${{i.price}}</p>
                                 <div class="product-rate">
                                     <div class="product-rating" style="width: 90%"></div>
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
                     </div>
                     <div class="banner-img wow fadeIn mb-lg-0 animated d-lg-block d-none">
                         <img src="{% static 'assets/imgs/banner/banner-11.png' %}" alt="" />
@@ -726,10 +705,10 @@
                         {% for i in categories %}
                         <div class="card-1">
                             <figure class="img-hover-scale overflow-hidden">
-                                <a href="category-{{i.id}}"><img src="{{i.icon.url}}" alt="" /></a>
+                                <a href="{% url "store:category" i.slug %}"><img src="{{i.icon.url}}" alt="" /></a>
                             </figure>
                             <h6>
-                                <a href="category-{{i.id}}">{{i.title}}</a>
+                                <a href="{% url "store:category" i.slug %}">{{i.title}}</a>
                             </h6>
                         </div>
                         {% endfor %}

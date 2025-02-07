@@ -7,6 +7,9 @@ urlpatterns = [
     # HomePage
     path('', views.index, name='index'),
 
+    # Category
+    path('category/<slug>/', views.category, name='category'),
+
     # Product Detail
     path('product-detail/<slug>/', views.product_detail, name='product-detail'),
 
